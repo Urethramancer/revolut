@@ -7,3 +7,11 @@ install:
   - go get github.com/jessevdk/go-flags
   - go get github.com/Urethramancer/cross
   - go get github.com/Urethramancer/slog
+
+include:
+  - os: linux
+    go: "1.11.x"
+    cache:
+      directories:
+        - $HOME/.cache/go-build
+        - $HOME/gopath/pkg/mod
