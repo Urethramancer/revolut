@@ -1,0 +1,21 @@
+{
+	"version": "2.0.0",
+	"label": "Build command line app",
+	"command": "./build",
+	"osx": {},
+	"type": "shell",
+	"problemMatcher": [
+		"$go"
+	],
+	"presentation": {
+		"reveal": "silent",
+		"showReuseMessage": true,
+	},
+	"group": {
+		"kind": "build",
+		"isDefault": true
+	},
+	"args": [
+		"${workspaceRoot}/cmd/revolut"
+	]
+}
