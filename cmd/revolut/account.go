@@ -9,7 +9,8 @@ import (
 )
 
 type AccountCmd struct {
-	AccList AccListCmd `command:"list" alias:"ls" description:"List accounts."`
+	AccList   AccListCmd   `command:"list" alias:"ls" description:"List accounts."`
+	AccUpdate AccUpdateCmd `command:"update" alias:"up" description:"Refresh the bank details cache."`
 }
 
 //
@@ -65,10 +66,33 @@ func (cmd *AccListCmd) Execute(args []string) error {
 // Account caching.
 //
 
-// AccUpdateCmd fetches a list of accounts and stores the details for each locally for faster lookup.
+// AccUpdateCmd fetches a list of accounts and stores the bank details for each locally for faster lookup.
 type AccUpdateCmd struct{}
 
+// Execute the account details update.
 func (cmd *AccUpdateCmd) Execute(args []string) error {
+	c, err := newClient()
+	if err != nil {
+		return err
+	}
+
+	list, err := c.GetAccounts()
+	if err != nil {
+		return err
+	}
+
+	details := &DetailsMap{}
+	for _, acc := range list {
+		if !details.HasID(acc.ID) {
+			det, err := c.GetAccountDetails(acc.ID)
+			if err != nil {
+				return err
+			}
+			details.Add(acc.ID, det)
+		}
+	}
+
+	saveAccounts(details)
 	return nil
 }
 
