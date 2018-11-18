@@ -10,7 +10,10 @@ import (
 )
 
 const (
+	// ConfigName contains the main settings.
 	ConfigName = "config.json"
+	// AccountsName is the name of the account cache.
+	AccountsName = "accounts.json"
 )
 
 var cfg Config
@@ -59,15 +62,9 @@ func LoadConfig() {
 		CreateConfig()
 	}
 
-	data, err := ioutil.ReadFile(cfgname)
+	err := LoadJSON(cfgname, &cfg)
 	if err != nil {
 		slog.Error("Error loading configuration: %s", err.Error())
-		os.Exit(2)
-	}
-
-	err = json.Unmarshal(data, &cfg)
-	if err != nil {
-		slog.Error("Error: %s\n", err.Error())
 		os.Exit(2)
 	}
 }

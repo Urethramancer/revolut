@@ -59,3 +59,13 @@ type AccUpdateCmd struct{}
 func (cmd *AccUpdateCmd) Execute(args []string) error {
 	return nil
 }
+
+// loadAccounts loads the cached account details.
+func loadAccounts() {
+
+}
+
+// saveAccounts saves the account details cache.
+func saveAccounts() {
+
+}
