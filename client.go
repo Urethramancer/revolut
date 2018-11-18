@@ -32,13 +32,15 @@ const (
 	//
 	// API Endpoints
 	//
-	epAccounts     = "accounts"
-	epCounterparty = "counterparty"
-	epTransfer     = "transfer"
-	epPayment      = "pay"
-	epCancel       = "transaction"
-	epTransactions = "transactions"
-	epWebhook      = "webhook"
+	epAccount        = "account"
+	epAccounts       = "accounts"
+	epAccountDetails = "bank-details"
+	epCounterparty   = "counterparty"
+	epTransfer       = "transfer"
+	epPayment        = "pay"
+	epCancel         = "transaction"
+	epTransactions   = "transactions"
+	epWebhook        = "webhook"
 
 	//
 	// Webhook events
