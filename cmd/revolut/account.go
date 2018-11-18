@@ -1,7 +1,8 @@
 package main
 
 import (
-	"github.com/Urethramancer/revolut"
+	"strings"
+
 	"github.com/Urethramancer/slog"
 )
 
@@ -14,11 +15,14 @@ type AccountCmd struct {
 //
 
 // AccListCmd is empty.
-type AccListCmd struct{}
+type AccListCmd struct {
+	Short      bool   `short:"s" description:"Shorten IDs for display purposes."`
+	Currencies string `short:"c" description:"List only this comma-separated list of currencies."`
+}
 
 // Execute lists the user's accounts.
 func (cmd *AccListCmd) Execute(args []string) error {
-	c, err := revolut.NewClient(cfg.SandboxKey)
+	c, err := newClient()
 	if err != nil {
 		return err
 	}
@@ -30,7 +34,16 @@ func (cmd *AccListCmd) Execute(args []string) error {
 
 	slog.Msg("Accounts:")
 	for _, acc := range list {
-		slog.Msg("%s: %s - %f %s", acc.ID, acc.Name, acc.Balance, acc.Currency)
+		id := acc.ID
+		if cmd.Short {
+			a := strings.Split(acc.ID, "-")
+			id = a[4]
+		}
+		name := acc.Name
+		if len(name) == 0 {
+			name = "<unnamed>"
+		}
+		slog.Msg("%s: %s - %f %s", id, name, acc.Balance, acc.Currency)
 	}
 
 	return nil
