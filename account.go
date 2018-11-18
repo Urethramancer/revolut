@@ -94,3 +94,15 @@ func (c *Client) GetAccount(id string) (*Account, error) {
 	err = json.Unmarshal(contents, &acc)
 	return &acc, err
 }
+
+// GetAccountDetails retrieves BankDetails for one specified account.
+func (c *Client) GetAccountDetails(id string) (*[]BankDetails, error) {
+	var det []BankDetails
+	contents, code, err := c.GetJSON(epAccounts + "/" + id + "/" + epAccountDetails)
+	c.ErrorCode = code
+	if err != nil {
+		return nil, err
+	}
+	err = json.Unmarshal(contents, &det)
+	return &det, err
+}
