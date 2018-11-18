@@ -19,3 +19,15 @@ func LoadJSON(filename string, out interface{}) error {
 
 	return nil
 }
+
+// SaveJSON marshals, indents and saves a supplied structure to the specified file.
+func SaveJSON(filename string, src interface{}) error {
+	var data []byte
+	var err error
+	data, err = json.MarshalIndent(src, "", "\t")
+	if err != nil {
+		return err
+	}
+
+	return ioutil.WriteFile(filename, data, 0600)
+}
