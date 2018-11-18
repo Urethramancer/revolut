@@ -24,6 +24,6 @@ func init() {
 }
 
 func main() {
-	cross.SetConfigPath("Revolut")
+	cross.SetConfigPath(programName)
 	flags.Parse(&O)
 }
