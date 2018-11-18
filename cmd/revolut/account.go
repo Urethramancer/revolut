@@ -43,7 +43,7 @@ func (cmd *AccListCmd) Execute(args []string) error {
 		if len(name) == 0 {
 			name = "<unnamed>"
 		}
-		slog.Msg("%s: %s - %f %s", id, name, acc.Balance, acc.Currency)
+		slog.Msg("%s (%s): %s - %f %s", id, acc.State, name, acc.Balance, acc.Currency)
 	}
 
 	return nil
