@@ -1,8 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-	"io/ioutil"
 	"os"
 
 	"github.com/Urethramancer/cross"
@@ -38,16 +36,8 @@ func CreateConfig() {
 
 // SaveConfig does just that.
 func SaveConfig() {
-	var data []byte
-	var err error
-	data, err = json.MarshalIndent(cfg, "", "\t")
-	if err != nil {
-		slog.Error("Error: %s", err.Error())
-		os.Exit(2)
-	}
-
 	cfgname := cross.ConfigName(ConfigName)
-	err = ioutil.WriteFile(cfgname, data, 0600)
+	err := SaveJSON(cfgname, cfg)
 	if err != nil {
 		slog.Error("Error saving configuration: %s", err.Error())
 		os.Exit(2)
