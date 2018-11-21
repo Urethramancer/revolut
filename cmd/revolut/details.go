@@ -14,6 +14,11 @@ func (d *DetailsMap) HasID(id string) bool {
 	return ok
 }
 
+// Get the details for an ID.
+func (d *DetailsMap) Get(id string) *[]revolut.BankDetails {
+	return (*d)[id]
+}
+
 // Add slice of band details to an ID.
 func (d *DetailsMap) Add(id string, det *[]revolut.BankDetails) {
 	(*d)[id] = det
