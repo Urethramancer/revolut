@@ -1,4 +1,4 @@
-// Client connection. Start here.
+// Package revolut provides an SDK to access the Revolut for Business API.
 package revolut
 
 import (

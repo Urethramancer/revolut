@@ -93,10 +93,13 @@ type ExternalCounterparty struct {
 	// BankCountry is a two-letter ISO code.
 	BankCountry string `json:"bank_country"`
 	// Currency is a 3-letter ISO code.
-	Currency string  `json:"currency"`
-	Email    string  `json:"email"`
-	Phone    string  `json:"phone"`
-	Address  Address `json:"address"`
+	Currency string `json:"currency"`
+	// Email is convenient, but optional.
+	Email string `json:"email"`
+	// Phone is convenient, but optional.
+	Phone string `json:"phone"`
+	// Address is optional, although some bank systems require them to verify recipients.
+	Address Address `json:"address"`
 	// AccountNo is required for UK GBP, US USD and SWIFT accounts.
 	AccountNo string `json:"account_no"`
 	// SortCode is required for UK GBP accounts.
