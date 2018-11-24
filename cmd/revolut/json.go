@@ -44,7 +44,33 @@ type JSONCmd struct {
 type JSONCPCmd struct{}
 
 func (cmd *JSONCPCmd) Execute(args []string) error {
-	var cp revolut.ExternalCounterparty
+	use := "use if not a company"
+	name := revolut.IndividualName{
+		First: use,
+		Last:  use,
+	}
+	cp := revolut.ExternalCounterparty{
+		Company:     "use if not an individual",
+		Name:        &name,
+		BankCountry: "GB",
+		Currency:    "GBP",
+		Email:       "test@sandbox.mars",
+		Phone:       "+447771234455",
+		Address: revolut.Address{
+			Street1:  "15 Credibility Street",
+			Street2:  "Canary Wharf",
+			Region:   "East End",
+			Postcode: "E115AB",
+			City:     "London",
+			Country:  "GB",
+		},
+		AccountNo: "12345678",
+		SortCode:  "1242",
+		RoutingNo: "666",
+		IBAN:      "iban",
+		BIC:       "bic/swift",
+	}
+
 	s, err := json.MarshalIndent(&cp, "", "\t")
 	if err != nil {
 		return err
