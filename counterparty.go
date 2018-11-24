@@ -178,17 +178,43 @@ func (c *Client) GetCounterparty(id string) {
 
 }
 
-// AddCounterparty
-func (c *Client) AddCounterparty() {
+// AddRevolutCounterparty adds a Revolut personal or business account as a counterparty.
+func (c *Client) AddRevolutCounterparty(cp RevolutCounterparty) (*CounterpartyResponse, error) {
+	contents, code, err := c.PostJSON(epCounterparty, cp)
+	if err != nil {
+		return nil, err
+	}
 
+	if code != 200 {
+		err = errors.New(codeToError(code))
+		return nil, err
+	}
+
+	var res CounterpartyResponse
+	err = json.Unmarshal(contents, &res)
+	if err != nil {
+		return nil, err
+	}
+
+	return &res, nil
 }
 
-// AddExternalCounterparty
+// AddExternalCounterparty adds a non-Revolut accounts as a counterparty.
 func (c *Client) AddExternalCounterparty() {
 
 }
 
-// DeleteCounterparty
-func (c *Client) DeleteCounterparty(id string) {
+// DeleteCounterparty removes a counterparty by UUID.
+func (c *Client) DeleteCounterparty(id string) error {
+	code, err := c.Delete(epCounterparty + "/" + id)
+	if err != nil {
+		return err
+	}
 
+	if code != 204 {
+		err = errors.New(codeToError(code))
+		return err
+	}
+
+	return nil
 }
