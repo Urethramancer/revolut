@@ -35,6 +35,7 @@ const (
 	epAccount        = "account"
 	epAccounts       = "accounts"
 	epAccountDetails = "bank-details"
+	epCounterparties = "counterparties"
 	epCounterparty   = "counterparty"
 	epTransfer       = "transfer"
 	epPayment        = "pay"
