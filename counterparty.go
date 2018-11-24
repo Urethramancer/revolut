@@ -176,7 +176,7 @@ func (c *Client) GetCounterparties() ([]Counterparty, error) {
 	return data, nil
 }
 
-// GetCounterparty
+// GetCounterparty gets a counterparty by ID.
 func (c *Client) GetCounterparty(id string) {
 
 }
@@ -195,16 +195,24 @@ func (c *Client) AddRevolutCounterparty(cp InternalCounterparty) (*CounterpartyR
 
 	var res CounterpartyResponse
 	err = json.Unmarshal(contents, &res)
-	if err != nil {
-		return nil, err
-	}
-
-	return &res, nil
+	return &res, err
 }
 
 // AddExternalCounterparty adds a non-Revolut account as a counterparty.
 func (c *Client) AddExternalCounterparty(cp ExternalCounterparty) (*ExternalCounterpartyResponse, error) {
-	return nil, nil
+	contents, code, err := c.PostJSON(epCounterparty, cp)
+	if err != nil {
+		return nil, err
+	}
+
+	if code != 200 {
+		err = errors.New(codeToError(code))
+		return nil, err
+	}
+
+	var res ExternalCounterpartyResponse
+	err = json.Unmarshal(contents, &res)
+	return &res, err
 }
 
 // DeleteCounterparty removes a counterparty by UUID.
