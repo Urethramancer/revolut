@@ -1,4 +1,4 @@
-# Revolut for Business (unofficial) [![Build Status](https://travis-ci.org/Urethramancer/revolut.svg?branch=master)](https://travis-ci.org/Urethramancer/revolut)
+# Revolut for Business (unofficial) [![Build Status](https://travis-ci.org/Urethramancer/revolut.svg?branch=master)](https://travis-ci.org/Urethramancer/revolut) [![GoDoc](https://godoc.org/github.com/Urethramancer/revolut?status.svg)](https://godoc.org/github.com/Urethramancer/revolut)
 Go SDK for accessing the Revolut for Business sandbox and production APIs.
 
 
