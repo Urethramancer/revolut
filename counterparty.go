@@ -47,7 +47,7 @@ type CounterpartyAccount struct {
 	// Country is a two-letter ISO code.
 	Country string `json:"bank_country"`
 	// Charges may be added.
-	Charges bool `json:"recipient_charges"`
+	Charges string `json:"recipient_charges"`
 }
 
 // InternalCounterparty is used when adding an existing Revolut account as a counterparty (i.e. contact).
