@@ -87,7 +87,7 @@ type CPAddRevolutCmd struct {
 
 // Execute the add Revolut counterparty command.
 func (cmd *CPAddRevolutCmd) Execute(args []string) error {
-	cp := revolut.RevolutCounterparty{}
+	cp := revolut.InternalCounterparty{}
 	if cmd.Business {
 		if len(cmd.Email) == 0 {
 			return errors.New("e-mail is required for business accounts")
