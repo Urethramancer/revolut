@@ -15,6 +15,7 @@ var O struct {
 	Counterparty CounterpartyCmd `command:"counterparty" alias:"cp" description:"Counterparty listing and management."`
 	Payment      PaymentCmd      `command:"payments" alias:"pay" description:"Payments and transactions."`
 	Webhooks     WebhooksCmd     `command:"webhooks" alias:"web" description:"Webhook listing and management."`
+	JSON         JSONCmd         `command:"json" description:"Print example data structures for JSON input."`
 }
 
 // Execute creates a new configuration file.
