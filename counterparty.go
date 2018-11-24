@@ -1,5 +1,55 @@
 package revolut
 
+import (
+	"encoding/json"
+	"errors"
+	"time"
+)
+
+// Counterparty is returned from the /counterparty and /counterparties endpoints.
+type Counterparty struct {
+	// ID is a UUID.
+	ID string `json:"id"`
+	// Name of the counterparty.
+	Name string `json:"name"`
+	// Phone number.
+	Phone string `json:"phone"`
+	// Type is "personal" or "business".
+	Type string `json:"profile_type"`
+	// Country is a two-letter ISO code.
+	Country string `json:"country"`
+	// State of the counterparty is a status string.
+	State string `json:"state"`
+	// CreatedAt is a timestamp for when this was added.
+	CreatedAt time.Time `json:"created_at"`
+	// UpdatedAt is a timestamp for the last change to the counterparty,
+	UpdatedAt time.Time `json:"updated_at"`
+	// Accounts is a list of public accounts for this counterparty.
+	Accounts []CounterpartyAccount `json:"accounts"`
+}
+
+// CounterpartyAccount is embedded in Counterparty structures.
+type CounterpartyAccount struct {
+	// ID is the UUID.
+	ID string `json:"id"`
+	// Currency is a three-letter shortname.
+	Currency string `json:"currency"`
+	// Type of account is either "revolut" or "external".
+	Type string `json:"type"`
+	// Account number.
+	Account string `json:"account_no,omitempty"`
+	// SortCode if used.
+	SortCode string `json:"sort_code,omitempty"`
+	// Email for the recipient.
+	Email string `json:"email,omitempty"`
+	// Name of the business or person this account belongs to.
+	Name string `json:"name,omitempty"`
+	// Country is a two-letter ISO code.
+	Country string `json:"bank_country,omitempty"`
+	// Charges may be added.
+	Charges bool `json:"recipient_charges,omitempty"`
+}
+
 // RevolutCounterparty is used when adding an existing Revolut account as a counterparty (i.e. contact).
 type RevolutCounterparty struct {
 	// ProfileType is "business" or "personal".
