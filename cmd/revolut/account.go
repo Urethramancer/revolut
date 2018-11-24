@@ -11,8 +11,8 @@ import (
 )
 
 type AccountCmd struct {
-	AccList   AccListCmd   `command:"list" alias:"ls" description:"List accounts."`
-	AccUpdate AccUpdateCmd `command:"update" alias:"up" description:"Refresh the bank details cache."`
+	List   AccListCmd   `command:"list" alias:"ls" description:"List accounts."`
+	Update AccUpdateCmd `command:"update" alias:"up" description:"Refresh the bank details cache."`
 }
 
 //
