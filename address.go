@@ -2,10 +2,10 @@ package revolut
 
 // Address is an account-holder's address.
 type Address struct {
-	// AddressStreet1 is line 1 of the address.
-	AddressStreet1 string `json:"street_line1"`
-	// AddressStreet2 is line 2 of the address.
-	AddressStreet2 string `json:"street_line2"`
+	// Street1 is line 1 of the address.
+	Street1 string `json:"street_line1"`
+	// Street2 is line 2 of the address.
+	Street2 string `json:"street_line2"`
 	// Region of the beneficiary.
 	Region string `json:"region"`
 	// City of the beneficiary.
