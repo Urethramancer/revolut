@@ -3,6 +3,9 @@ package main
 import (
 	"encoding/json"
 	"io/ioutil"
+
+	"github.com/Urethramancer/revolut"
+	"github.com/Urethramancer/slog"
 )
 
 // LoadJSON loads and unmarshals a specified JSON file into a supplied structure pointer.
@@ -30,4 +33,22 @@ func SaveJSON(filename string, src interface{}) error {
 	}
 
 	return ioutil.WriteFile(filename, data, 0600)
+}
+
+// JSONCmd prints data structures for advanced input.
+type JSONCmd struct {
+	CP JSONCPCmd `command:"counterparty" alias:"cp" description:"Print the input JSON for external counterparties."`
+}
+
+// JSONCPCmd prints an empty ExternalCounterparty structure.
+type JSONCPCmd struct{}
+
+func (cmd *JSONCPCmd) Execute(args []string) error {
+	var cp revolut.ExternalCounterparty
+	s, err := json.MarshalIndent(&cp, "", "\t")
+	if err != nil {
+		return err
+	}
+	slog.Msg("%s", s)
+	return nil
 }
