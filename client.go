@@ -93,11 +93,11 @@ func (c *Client) GetJSON(path string) ([]byte, int, error) {
 
 	c.setHeader(req)
 	response, err := c.Do(req)
+	defer response.Body.Close()
 	if err != nil {
 		return nil, response.StatusCode, err
 	}
 
-	defer response.Body.Close()
 	contents, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		return nil, response.StatusCode, err
@@ -121,11 +121,12 @@ func (c *Client) PostJSON(path string, data interface{}) ([]byte, int, error) {
 
 	c.setHeader(req)
 	response, err := c.Do(req)
+	defer response.Body.Close()
 	if err != nil {
+		_, _ = ioutil.ReadAll(response.Body)
 		return nil, response.StatusCode, err
 	}
 
-	defer response.Body.Close()
 	contents, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		return nil, response.StatusCode, err
@@ -144,6 +145,7 @@ func (c *Client) Delete(path string) (int, error) {
 
 	c.setHeader(req)
 	response, err := c.Do(req)
+	defer response.Body.Close()
 	if err != nil {
 		return response.StatusCode, err
 	}
