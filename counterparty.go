@@ -50,8 +50,8 @@ type CounterpartyAccount struct {
 	Charges bool `json:"recipient_charges"`
 }
 
-// RevolutCounterparty is used when adding an existing Revolut account as a counterparty (i.e. contact).
-type RevolutCounterparty struct {
+// InternalCounterparty is used when adding an existing Revolut account as a counterparty (i.e. contact).
+type InternalCounterparty struct {
 	// ProfileType is "business" or "personal".
 	ProfileType string `json:"profile_type"`
 	// Name of the counterparty.
@@ -62,7 +62,7 @@ type RevolutCounterparty struct {
 	Email string `json:"email"`
 }
 
-// CounterpartyDetails is returned after adding/removing a Revolut counterparty.
+// CounterpartyResponse is returned after adding/removing a Revolut counterparty.
 type CounterpartyResponse struct {
 	// ID is the UUID of the counterparty.
 	ID string `json:"id"`
@@ -182,7 +182,7 @@ func (c *Client) GetCounterparty(id string) {
 }
 
 // AddRevolutCounterparty adds a Revolut personal or business account as a counterparty.
-func (c *Client) AddRevolutCounterparty(cp RevolutCounterparty) (*CounterpartyResponse, error) {
+func (c *Client) AddRevolutCounterparty(cp InternalCounterparty) (*CounterpartyResponse, error) {
 	contents, code, err := c.PostJSON(epCounterparty, cp)
 	if err != nil {
 		return nil, err
