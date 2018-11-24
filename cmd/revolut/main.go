@@ -13,8 +13,7 @@ var O struct {
 	AppConfig    AppConfigCmd    `command:"config" alias:"cfg" description:"Application configuration."`
 	Account      AccountCmd      `command:"account" alias:"acc" description:"Account details."`
 	Counterparty CounterpartyCmd `command:"counterparty" alias:"cp" description:"Counterparty listing and management."`
-	Transaction  TransactionCmd  `command:"transaction" alias:"tr" description:"Transaction listing and management."`
-	Payment      PaymentCmd      `command:"payment" alias:"pay" description:"Payment creation."`
+	Payment      PaymentCmd      `command:"payments" alias:"pay" description:"Payments and transactions."`
 	Webhooks     WebhooksCmd     `command:"webhooks" alias:"web" description:"Webhook listing and management."`
 }
 
