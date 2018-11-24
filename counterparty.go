@@ -37,17 +37,17 @@ type CounterpartyAccount struct {
 	// Type of account is either "revolut" or "external".
 	Type string `json:"type"`
 	// Account number.
-	Account string `json:"account_no,omitempty"`
+	Account string `json:"account_no"`
 	// SortCode if used.
-	SortCode string `json:"sort_code,omitempty"`
+	SortCode string `json:"sort_code"`
 	// Email for the recipient.
-	Email string `json:"email,omitempty"`
+	Email string `json:"email"`
 	// Name of the business or person this account belongs to.
-	Name string `json:"name,omitempty"`
+	Name string `json:"name"`
 	// Country is a two-letter ISO code.
-	Country string `json:"bank_country,omitempty"`
+	Country string `json:"bank_country"`
 	// Charges may be added.
-	Charges bool `json:"recipient_charges,omitempty"`
+	Charges bool `json:"recipient_charges"`
 }
 
 // RevolutCounterparty is used when adding an existing Revolut account as a counterparty (i.e. contact).
@@ -59,7 +59,7 @@ type RevolutCounterparty struct {
 	// Phone is used with personal accounts.
 	Phone string `json:"phone"`
 	// Email is an optional field with the address of the admin for a business account.
-	Email string `json:"email,omitempty"`
+	Email string `json:"email"`
 }
 
 // CounterpartyDetails is returned after adding/removing a Revolut counterparty.
@@ -85,28 +85,28 @@ type CounterpartyResponse struct {
 }
 
 // ExternalCounterparty is used when adding a counterparty with a non-Revolut account.
-type ExternalCounterParty struct {
+type ExternalCounterparty struct {
 	// Company must exist if Individual isn't present.
-	Company string `json:"company_name,omitempty"`
+	Company string `json:"company_name"`
 	// Individual must exist if Company isn't present.
-	Individual IndividualName `json:"individual_name,omitempty"`
+	Individual IndividualName `json:"individual_name"`
 	// BankCountry is a two-letter ISO code.
 	BankCountry string `json:"bank_country"`
 	// Currency is a 3-letter ISO code.
 	Currency string  `json:"currency"`
-	Email    string  `json:"email,omitempty"`
-	Phone    string  `json:"phone,omitempty"`
-	Address  Address `json:"address,omitempty"`
+	Email    string  `json:"email"`
+	Phone    string  `json:"phone"`
+	Address  Address `json:"address"`
 	// AccountNo is required for UK GBP, US USD and SWIFT accounts.
-	AccountNo string `json:"account_no,omitempty"`
+	AccountNo string `json:"account_no"`
 	// SortCode is required for UK GBP accounts.
-	SortCode string `json:"sort_code,omitempty"`
+	SortCode string `json:"sort_code"`
 	// RoutingNo is required for US USD accounts.
-	RoutingNo string `json:"routing_number,omitempty"`
+	RoutingNo string `json:"routing_number"`
 	// IBAN is required for IBAN countries.
-	IBAN string `json:"iban,omitempty"`
+	IBAN string `json:"iban"`
 	// BIC is required for IBAN/SWIFT accounts.
-	BIC string `json:"bic,omitempty"`
+	BIC string `json:"bic"`
 }
 
 // IndividualName of an account holder.
@@ -142,15 +142,15 @@ type ExternalAccount struct {
 	// Type is "revolut" or "external".
 	Type string `json:"type"`
 	// AccountNo for UK GBP, US USD and SWIFT accounts
-	AccountNo string `json:"account_no,omitempty"`
+	AccountNo string `json:"account_no"`
 	// IBAN of a foreign account.
 	IBAN string `json:"iban"`
 	// SortCode of a UK GBP account.
-	SortCode string `json:"sort_code,omitempty"`
+	SortCode string `json:"sort_code"`
 	// RoutingNo of a US USD account
-	RoutingNo string `json:"routing_number,omitempty"`
+	RoutingNo string `json:"routing_number"`
 	// BIC of an IBAN/SWIFT account.
-	BIC string `json:"bic,omitempty"`
+	BIC string `json:"bic"`
 	// RecipientCharges is "no", "expected" or possible "free". TODO: Clarify with devs.
 	RecipientCharges string `json:"recipient_charges"`
 }
@@ -200,8 +200,8 @@ func (c *Client) AddRevolutCounterparty(cp RevolutCounterparty) (*CounterpartyRe
 }
 
 // AddExternalCounterparty adds a non-Revolut account as a counterparty.
-func (c *Client) AddExternalCounterparty() {
-
+func (c *Client) AddExternalCounterparty(cp ExternalCounterparty) (*ExternalCounterpartyResponse, error) {
+	return nil, nil
 }
 
 // DeleteCounterparty removes a counterparty by UUID.
