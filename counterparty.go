@@ -199,7 +199,7 @@ func (c *Client) AddRevolutCounterparty(cp RevolutCounterparty) (*CounterpartyRe
 	return &res, nil
 }
 
-// AddExternalCounterparty adds a non-Revolut accounts as a counterparty.
+// AddExternalCounterparty adds a non-Revolut account as a counterparty.
 func (c *Client) AddExternalCounterparty() {
 
 }
