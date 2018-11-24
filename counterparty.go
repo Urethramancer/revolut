@@ -155,9 +155,22 @@ type ExternalAccount struct {
 	RecipientCharges string `json:"recipient_charges"`
 }
 
-// GetCounterparties
-func (c *Client) GetCounterparties() {
+// GetCounterparties returns a list of all counterparties for an API key.
+func (c *Client) GetCounterparties() ([]Counterparty, error) {
+	contents, code, err := c.GetJSON(epCounterparties)
 
+	if code != 200 {
+		err = errors.New(codeToError(code))
+		return nil, err
+	}
+
+	var data []Counterparty
+	err = json.Unmarshal(contents, &data)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }
 
 // GetCounterparty
