@@ -2,6 +2,8 @@
 package revolut
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
 	"io/ioutil"
 	"net/http"
@@ -83,23 +85,73 @@ func (c *Client) SetAPI(key string) error {
 
 // GetJSON builds the full endpoint path and gets the raw JSON.
 func (c *Client) GetJSON(path string) ([]byte, int, error) {
-	url := strings.Join([]string{c.baseURL, path}, "/")
+	url := strings.Join([]string{c.baseURL, path}, "")
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, 0, err
 	}
 
-	req.Header.Set("Authorization", c.bearer)
+	c.setHeader(req)
 	response, err := c.Do(req)
 	if err != nil {
-		return nil, 0, err
+		return nil, response.StatusCode, err
 	}
 
 	defer response.Body.Close()
 	contents, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		return nil, 0, err
+		return nil, response.StatusCode, err
 	}
 
 	return contents, response.StatusCode, nil
+}
+
+// PostJSON builds the full endpoint path and posts the provided data, returning the JSON response.
+func (c *Client) PostJSON(path string, data interface{}) ([]byte, int, error) {
+	msg, err := json.Marshal(data)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	url := strings.Join([]string{c.baseURL, path}, "")
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(msg))
+	if err != nil {
+		return nil, 0, err
+	}
+
+	c.setHeader(req)
+	response, err := c.Do(req)
+	if err != nil {
+		return nil, response.StatusCode, err
+	}
+
+	defer response.Body.Close()
+	contents, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return nil, response.StatusCode, err
+	}
+
+	return contents, response.StatusCode, nil
+}
+
+// Delete sends a delete command to an endpoint. The URL is the data and the HTTP response code is the only result.
+func (c *Client) Delete(path string) (int, error) {
+	url := strings.Join([]string{c.baseURL, path}, "")
+	req, err := http.NewRequest("DELETE", url, nil)
+	if err != nil {
+		return 0, err
+	}
+
+	c.setHeader(req)
+	response, err := c.Do(req)
+	if err != nil {
+		return response.StatusCode, err
+	}
+
+	return response.StatusCode, nil
+}
+
+// setHeader helper function.
+func (c *Client) setHeader(req *http.Request) {
+	req.Header.Set("Authorization", c.bearer)
 }
