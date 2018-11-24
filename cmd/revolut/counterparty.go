@@ -1,10 +1,13 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
+	"io/ioutil"
 	"strings"
 	"time"
 
+	"github.com/Urethramancer/cross"
 	"github.com/Urethramancer/revolut"
 	"github.com/Urethramancer/slog"
 )
@@ -116,16 +119,47 @@ func (cmd *CPAddRevolutCmd) Execute(args []string) error {
 		return err
 	}
 
-	slog.Msg("%#v", resp)
-	slog.Msg("Counterparty added successfully.")
+	slog.Msg("Counterparty %s added successfully.", resp.ID)
 	return nil
 }
 
 // CPAddExternalCmd adds an external (non-Revolut) counterparty.
-type CPAddExternalCmd struct{}
+type CPAddExternalCmd struct {
+	Business bool `short:"b" long:"business" description:"The counterparty is a business account. Will be personal if unspecified."`
+	Args     struct {
+		Nick     string `required:"true" positional-arg-name:"NICKNAME" description:"Nickname for reference in commands."`
+		Filename string `required:"true" positional-arg-name:"FILENAME" description:"JSON file to load details from. Use the 'json' tool command to show an example to start from."`
+	} `positional-args:"true"`
+}
 
 // Execute the add External counterparty command.
 func (cmd *CPAddExternalCmd) Execute(args []string) error {
+	if !cross.FileExists(cmd.Args.Filename) {
+		return errors.New("no such file: " + cmd.Args.Filename)
+	}
+
+	data, err := ioutil.ReadFile(cmd.Args.Filename)
+	if err != nil {
+		return err
+	}
+
+	cp := revolut.ExternalCounterparty{}
+	err = json.Unmarshal(data, &cp)
+	if err != nil {
+		return err
+	}
+
+	c, err := newClient()
+	if err != nil {
+		return err
+	}
+
+	res, err := c.AddExternalCounterparty(cp)
+	if err != nil {
+		return err
+	}
+
+	slog.Msg("Counterparty %s added successfully.", res.ID)
 	return nil
 }
 
