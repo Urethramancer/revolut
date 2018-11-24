@@ -87,37 +87,37 @@ type CounterpartyResponse struct {
 // ExternalCounterparty is used when adding a counterparty with a non-Revolut account.
 type ExternalCounterparty struct {
 	// Company must exist if Individual isn't present.
-	Company string `json:"company_name"`
+	Company string `json:"company_name,omitempty"`
 	// Individual must exist if Company isn't present.
-	Individual IndividualName `json:"individual_name"`
+	Name *IndividualName `json:"individual_name,omitempty"`
 	// BankCountry is a two-letter ISO code.
 	BankCountry string `json:"bank_country"`
 	// Currency is a 3-letter ISO code.
 	Currency string `json:"currency"`
 	// Email is convenient, but optional.
-	Email string `json:"email"`
+	Email string `json:"email,omitempty"`
 	// Phone is convenient, but optional.
-	Phone string `json:"phone"`
+	Phone string `json:"phone,omitempty"`
 	// Address is optional, although some bank systems require them to verify recipients.
-	Address Address `json:"address"`
+	Address Address `json:"address,omitempty"`
 	// AccountNo is required for UK GBP, US USD and SWIFT accounts.
 	AccountNo string `json:"account_no"`
 	// SortCode is required for UK GBP accounts.
-	SortCode string `json:"sort_code"`
+	SortCode string `json:"sort_code,omitempty"`
 	// RoutingNo is required for US USD accounts.
-	RoutingNo string `json:"routing_number"`
+	RoutingNo string `json:"routing_number,omitempty"`
 	// IBAN is required for IBAN countries.
-	IBAN string `json:"iban"`
+	IBAN string `json:"iban,omitempty"`
 	// BIC is required for IBAN/SWIFT accounts.
-	BIC string `json:"bic"`
+	BIC string `json:"bic,omitempty"`
 }
 
 // IndividualName of an account holder.
 type IndividualName struct {
 	// First name.
-	First string `json:"first_name"`
+	First string `json:"first_name,omitempty"`
 	// Last name.
-	Last string `json:"last_name"`
+	Last string `json:"last_name,omitempty"`
 }
 
 // ExternalCounterpartyResponse is returned after adding/removing an external counterparty.
