@@ -60,6 +60,10 @@ func (cmd *AccListCmd) Execute(args []string) error {
 			name = "<unnamed>"
 		}
 
+		if !cmd.shouldDisplay(acc.Currency, cmd.Currencies) {
+			continue
+		}
+
 		slog.Msg("%s (%s): %s - %f %s", id, acc.State, name, acc.Balance, acc.Currency)
 		if cmd.Details {
 			showDetails(details.Get(acc.ID))
@@ -68,6 +72,21 @@ func (cmd *AccListCmd) Execute(args []string) error {
 
 	saveAccounts(details)
 	return nil
+}
+
+func (cmd *AccListCmd) shouldDisplay(currency, list string) bool {
+	if len(list) == 0 {
+		return true
+	}
+
+	l := strings.Split(list, ",")
+	for _, c := range l {
+		if currency == c {
+			return true
+		}
+	}
+
+	return false
 }
 
 func showDetails(det *[]revolut.BankDetails) {
