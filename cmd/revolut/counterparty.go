@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
-	"strings"
 	"time"
 
 	"github.com/Urethramancer/cross"
@@ -14,6 +13,7 @@ import (
 
 type CounterpartyCmd struct {
 	List   CPListCmd   `command:"list" alias:"ls" description:"List counterparties."`
+	Get    CPGetCmd    `command:"get" description:"Get a counterparty by nickname or UUID."`
 	Add    CPAddCmd    `command:"add" description:"Add a new counterparty."`
 	Delete CPDeleteCmd `command:"delete" alias:"del" alias:"rm" description:"Delete a counterparty."`
 }
@@ -41,32 +41,85 @@ func (cmd *CPListCmd) Execute(args []string) error {
 		return nil
 	}
 
-	slog.Msg("Counterparties:")
+	slog.Msg("%d counterparties:", len(list))
 	for _, cp := range list {
-		id := cp.ID
-		if cmd.Short {
-			a := strings.Split(id, "-")
-			id = a[len(a)-1]
+		displayCounterparty(cp, cmd.Short, cmd.Details)
+	}
+	return nil
+}
+
+func displayCounterparty(cp revolut.Counterparty, short, details bool) {
+	id := cp.ID
+	if short {
+		id = shortUUID(id)
+	}
+
+	if cp.Type == "personal" {
+		slog.Msg("%s (%s): %s (%s), Phone: %s, updated %s", id, cp.Type, cp.Name, cp.Country, cp.Phone, cp.UpdatedAt.Format(time.RFC822))
+	} else {
+		slog.Msg("%s (%s): (%s), updated %s", id, cp.Type, cp.Country, cp.UpdatedAt.Format(time.RFC822))
+	}
+
+	if !details || len(cp.Accounts) == 0 {
+		return
+	}
+
+	slog.Msg("\tBank details:")
+	for _, acc := range cp.Accounts {
+		id = acc.ID
+		if short {
+			id = shortUUID(id)
 		}
-		switch cp.Type {
-		case "personal":
-			slog.Msg("%s (%s): %s (%s), Phone: %s, updated %s", id, cp.Type, cp.Name, cp.Country, cp.Phone, cp.UpdatedAt.Format(time.RFC822))
-		case "business":
-			slog.Msg("%s (%s): (%s), updated %s", id, cp.Type, cp.Country, cp.UpdatedAt.Format(time.RFC822))
-		}
-		if !cmd.Details {
-			continue
-		}
-		slog.Msg("\tBank details:")
-		for _, acc := range cp.Accounts {
-			id = acc.ID
-			if cmd.Short {
-				a := strings.Split(id, "-")
-				id = a[len(a)-1]
+		slog.Msg("\t%s (%s, %s)", id, acc.Type, acc.Currency)
+		if acc.Type == "external" {
+			slog.Msg("\t\t%s", acc.Name)
+			if len(acc.Account) > 0 {
+				slog.Msg("\t\tAccount no.: %s", acc.Account)
 			}
-			slog.Msg("\t%s (%s, %s)", id, acc.Type, acc.Currency)
+			if len(acc.SortCode) > 0 {
+				slog.Msg("\t\tSort code: %s", acc.SortCode)
+			}
+			if len(acc.Email) > 0 {
+				slog.Msg("\t\tE-mail: %s", acc.Email)
+			}
+			if len(acc.Country) > 0 {
+				slog.Msg("\t\tBank country: %s", acc.Country)
+			}
+			if len(acc.Charges) > 0 {
+				slog.Msg("\t\tCharges: %s", acc.Charges)
+			}
 		}
 	}
+}
+
+// CPGetCmd gets one specific counterparty.
+type CPGetCmd struct {
+	JSON    bool `short:"j" long:"json" description:"Print the actual JSON structure instead of formatted information."`
+	Short   bool `short:"s" description:"Shorten IDs for display purposes."`
+	Details bool `short:"d" description:"Show details for each account."`
+	Args    struct {
+		ID string `required:"true" positional-arg-name:"ID" description:"ID of a counterparty. If you specify a nickname instead, the counterparty is fetched from the cache."`
+	} `positional-args:"true"`
+}
+
+// Execute the counterparty get command.
+func (cmd *CPGetCmd) Execute(args []string) error {
+	c, err := newClient()
+	if err != nil {
+		return err
+	}
+
+	cp, err := c.GetCounterparty(cmd.Args.ID)
+	if err != nil {
+		return err
+	}
+
+	if cmd.JSON {
+		data, _ := json.MarshalIndent(cp, "", "\t")
+		slog.Msg("%s", data)
+		return nil
+	}
+
 	return nil
 }
 

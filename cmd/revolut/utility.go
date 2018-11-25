@@ -1,6 +1,8 @@
 package main
 
 import (
+	"strings"
+
 	"github.com/Urethramancer/revolut"
 )
 
@@ -12,4 +14,10 @@ func newClient() (*revolut.Client, error) {
 	}
 
 	return revolut.NewClient(key)
+}
+
+// shortUUID shortens a UUID to the last element for display purposes.
+func shortUUID(id string) string {
+	a := strings.Split(id, "-")
+	return a[len(a)-1]
 }
