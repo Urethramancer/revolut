@@ -33,35 +33,39 @@ func (cmd *CPListCmd) Execute(args []string) error {
 		return err
 	}
 
-	list, err := c.GetCounterparties()
-	if err != nil {
-		return err
+	cache := loadCounterparties()
+	if len(*cache) == 0 {
+		list, err := c.GetCounterparties()
+		if err != nil {
+			return err
+		}
+
+		for _, cp := range list {
+			cache.Set(cp.ID, &cp)
+		}
+		saveCounterparties(cache)
 	}
 
-	if len(list) == 0 {
+	if len(*cache) == 0 {
 		slog.Msg("No counterparties to list.")
 		return nil
 	}
 
-	slog.Msg("%d counterparties:", len(list))
-	for _, cp := range list {
+	slog.Msg("%d counterparties:", len(*cache))
+	for k, _ := range *cache {
+		cp := cache.Get(k)
 		displayCounterparty(cp, cmd.Short, cmd.Details)
 	}
 	return nil
 }
 
-func displayCounterparty(cp revolut.Counterparty, short, details bool) {
+func displayCounterparty(cp *revolut.Counterparty, short, details bool) {
 	id := cp.ID
 	if short {
 		id = shortUUID(id)
 	}
 
-	if cp.Type == "personal" {
-		slog.Msg("%s (%s): %s (%s), Phone: %s, updated %s", id, cp.Type, cp.Name, cp.Country, cp.Phone, cp.UpdatedAt.Format(time.RFC822))
-	} else {
-		slog.Msg("%s (%s): (%s), updated %s", id, cp.Type, cp.Country, cp.UpdatedAt.Format(time.RFC822))
-	}
-
+	slog.Msg("%s (%s): %s (%s), Phone: %s, updated %s", id, cp.Type, cp.Name, cp.Country, cp.Phone, cp.UpdatedAt.Format(time.RFC822))
 	if !details || len(cp.Accounts) == 0 {
 		return
 	}
@@ -122,7 +126,7 @@ func (cmd *CPGetCmd) Execute(args []string) error {
 		return nil
 	}
 
-	displayCounterparty(*cp, cmd.Short, cmd.Details)
+	displayCounterparty(cp, cmd.Short, cmd.Details)
 	return nil
 }
 

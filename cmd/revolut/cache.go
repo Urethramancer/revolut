@@ -67,7 +67,7 @@ func saveBankDetails(cache *DetailsCache) {
 //
 
 // CounterpartyCache holds previously seen counterparties.
-type CounterpartyCache map[string]*[]revolut.Counterparty
+type CounterpartyCache map[string]*revolut.Counterparty
 
 // HasID convenience function.
 func (c *CounterpartyCache) HasID(id string) bool {
@@ -79,18 +79,13 @@ func (c *CounterpartyCache) HasID(id string) bool {
 	return ok
 }
 
-// Get the details for an ID.
-func (c *CounterpartyCache) Get(id string) *[]revolut.Counterparty {
+// Get the cached counterparty for an ID.
+func (c *CounterpartyCache) Get(id string) *revolut.Counterparty {
 	return (*c)[id]
 }
 
-// Set the details list for an ID.
-func (c *CounterpartyCache) Set(id string, list *[]revolut.Counterparty) {
-	(*c)[id] = list
-}
-
-// Add slice of band details to an ID.
-func (c *CounterpartyCache) Add(id string, cp *[]revolut.Counterparty) {
+// Set the cached counterparty for an ID.
+func (c *CounterpartyCache) Set(id string, cp *revolut.Counterparty) {
 	(*c)[id] = cp
 }
 
@@ -98,7 +93,7 @@ func (c *CounterpartyCache) Add(id string, cp *[]revolut.Counterparty) {
 func loadCounterparties() *CounterpartyCache {
 	fn := cross.ConfigName(CounterpartiesFile)
 	cache := CounterpartyCache{}
-	err := LoadJSON(fn, cache)
+	err := LoadJSON(fn, &cache)
 	if err != nil {
 		slog.Warn("Couldn't load counterparty cache: %s. Proceeding with clean slate.", err.Error())
 	}
@@ -109,7 +104,7 @@ func loadCounterparties() *CounterpartyCache {
 // saveAccounts saves the account details cache.
 func saveCounterparties(cache *CounterpartyCache) {
 	fn := cross.ConfigName(CounterpartiesFile)
-	err := SaveJSON(fn, cache)
+	err := SaveJSON(fn, &cache)
 	if err != nil {
 		slog.Error("Error saving counterparty cache: ", err.Error())
 		os.Exit(2)
