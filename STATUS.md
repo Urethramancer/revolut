@@ -5,6 +5,7 @@
 - Switching between sandbox and production APIs
 - Configuring keys without editing configuration file directly
 - Getting and caching the list of accounts for key, with bank details
+- View single account
 - List counterparties and bank details
 - Get one counterparty by ID and view plain info or the JSON form
 - Add Revolut counterparties via command line
