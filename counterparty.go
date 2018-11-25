@@ -180,8 +180,24 @@ func (c *Client) GetCounterparties() ([]Counterparty, error) {
 }
 
 // GetCounterparty gets a counterparty by ID.
-func (c *Client) GetCounterparty(id string) {
+func (c *Client) GetCounterparty(id string) (*Counterparty, error) {
+	contents, code, err := c.GetJSON(epCounterparty + "/" + id)
+	if err != nil {
+		return nil, err
+	}
 
+	if code != 200 {
+		err = errors.New(codeToError(code))
+		return nil, err
+	}
+
+	var data Counterparty
+	err = json.Unmarshal(contents, &data)
+	if err != nil {
+		return nil, err
+	}
+
+	return &data, nil
 }
 
 // AddRevolutCounterparty adds a Revolut personal or business account as a counterparty.
