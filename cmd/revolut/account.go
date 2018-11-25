@@ -12,7 +12,8 @@ import (
 
 // AccountCmd holds tool commands for account viewing and management.
 type AccountCmd struct {
-	List   AccListCmd   `command:"list" alias:"ls" description:"List accounts."`
+	List   AccListCmd   `command:"list" alias:"ls" description:"List accounts. They will be loaded from the cache if available."`
+	Show   AccShowCmd   `command:"show" description:"Show one specific account by UUID. It will be loaded from the cache if available."`
 	Update AccUpdateCmd `command:"update" alias:"up" description:"Refresh the bank details cache."`
 }
 
@@ -61,7 +62,7 @@ func (cmd *AccListCmd) Execute(args []string) error {
 			name = "<unnamed>"
 		}
 
-		if !cmd.shouldDisplay(acc.Currency, cmd.Currencies) {
+		if !shouldDisplayCurrency(acc.Currency, cmd.Currencies) {
 			continue
 		}
 
@@ -73,21 +74,6 @@ func (cmd *AccListCmd) Execute(args []string) error {
 
 	saveAccounts(details)
 	return nil
-}
-
-func (cmd *AccListCmd) shouldDisplay(currency, list string) bool {
-	if len(list) == 0 {
-		return true
-	}
-
-	l := strings.Split(list, ",")
-	for _, c := range l {
-		if currency == c {
-			return true
-		}
-	}
-
-	return false
 }
 
 func showDetails(det *[]revolut.BankDetails) {
@@ -119,6 +105,44 @@ func prDet(pre, x string) {
 	if len(x) > 0 {
 		slog.Msg("\t%s %s", pre, x)
 	}
+}
+
+// AccShowCmd shows one account.
+type AccShowCmd struct {
+	Short      bool   `short:"s" description:"Shorten IDs for display purposes."`
+	Details    bool   `short:"d" description:"Show details for each account."`
+	Currencies string `short:"c" description:"List only this comma-separated list of currencies."`
+	Args       struct {
+		ID string `required:"true" positional-arg-name:"ID" description:"UUID of account to show."`
+	} `positional-args:"true"`
+}
+
+// Execute the single-account listing.
+func (cmd *AccShowCmd) Execute(args []string) error {
+	details := loadAccounts()
+	var det *[]revolut.BankDetails
+	var err error
+	if details.HasID(cmd.Args.ID) {
+		det = details.Get(cmd.Args.ID)
+	} else {
+		var c *revolut.Client
+		c, err = newClient()
+		if err != nil {
+			return err
+		}
+
+		det, err = c.GetAccountDetails(cmd.Args.ID)
+		if err != nil {
+			return err
+		}
+
+		// Save it to the cache
+		details.Set(cmd.Args.ID, det)
+		saveAccounts(details)
+	}
+
+	showDetails(det)
+	return nil
 }
 
 //

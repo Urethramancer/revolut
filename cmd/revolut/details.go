@@ -20,6 +20,11 @@ func (d *DetailsMap) Get(id string) *[]revolut.BankDetails {
 	return (*d)[id]
 }
 
+// Set the details list for an ID.
+func (d *DetailsMap) Set(id string, list *[]revolut.BankDetails) {
+	(*d)[id] = list
+}
+
 // Add slice of band details to an ID.
 func (d *DetailsMap) Add(id string, det *[]revolut.BankDetails) {
 	(*d)[id] = det
