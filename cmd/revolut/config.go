@@ -9,9 +9,11 @@ import (
 
 const (
 	// ConfigName contains the main settings.
-	ConfigName = "config.json"
+	ConfigFile = "config.json"
 	// AccountsName is the name of the account cache.
-	AccountsName = "accounts.json"
+	BankDetailsFile = "accounts.json"
+	// CounterpartiesName is the name of the counterparty cache.
+	CounterpartiesFile = "counterparties.json"
 )
 
 var cfg Config
@@ -31,13 +33,13 @@ func CreateConfig() {
 	cfg.SandboxKey = "change me"
 	cfg.UseSandbox = true
 	SaveConfig()
-	slog.Msg("Created '%s'. Edit the API keys before you run this program again.", cross.ConfigName(ConfigName))
+	slog.Msg("Created '%s'. Edit the API keys before you run this program again.", cross.ConfigName(ConfigFile))
 	os.Exit(0)
 }
 
 // SaveConfig does just that.
 func SaveConfig() {
-	cfgname := cross.ConfigName(ConfigName)
+	cfgname := cross.ConfigName(ConfigFile)
 	err := SaveJSON(cfgname, cfg)
 	if err != nil {
 		slog.Error("Error saving configuration: %s", err.Error())
@@ -48,7 +50,7 @@ func SaveConfig() {
 // LoadConfig loads the default config.
 func LoadConfig() {
 	cross.SetConfigPath(programName)
-	cfgname := cross.ConfigName(ConfigName)
+	cfgname := cross.ConfigName(ConfigFile)
 	if !cross.FileExists(cfgname) {
 		CreateConfig()
 	}

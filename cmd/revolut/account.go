@@ -2,10 +2,8 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
-	"github.com/Urethramancer/cross"
 	"github.com/Urethramancer/revolut"
 	"github.com/Urethramancer/slog"
 )
@@ -40,7 +38,7 @@ func (cmd *AccListCmd) Execute(args []string) error {
 		return err
 	}
 
-	details := loadAccounts()
+	details := loadBankDetails()
 
 	slog.Msg("Accounts:")
 	for _, acc := range list {
@@ -72,7 +70,7 @@ func (cmd *AccListCmd) Execute(args []string) error {
 		}
 	}
 
-	saveAccounts(details)
+	saveBankDetails(details)
 	return nil
 }
 
@@ -119,7 +117,7 @@ type AccShowCmd struct {
 
 // Execute the single-account listing.
 func (cmd *AccShowCmd) Execute(args []string) error {
-	details := loadAccounts()
+	details := loadBankDetails()
 	var det *[]revolut.BankDetails
 	var err error
 	if details.HasID(cmd.Args.ID) {
@@ -138,7 +136,7 @@ func (cmd *AccShowCmd) Execute(args []string) error {
 
 		// Save it to the cache
 		details.Set(cmd.Args.ID, det)
-		saveAccounts(details)
+		saveBankDetails(details)
 	}
 
 	showDetails(det)
@@ -164,39 +162,17 @@ func (cmd *AccUpdateCmd) Execute(args []string) error {
 		return err
 	}
 
-	details := &DetailsMap{}
+	cache := &DetailsCache{}
 	for _, acc := range list {
-		if !details.HasID(acc.ID) {
+		if !cache.HasID(acc.ID) {
 			det, err := c.GetAccountDetails(acc.ID)
 			if err != nil {
 				return err
 			}
-			details.Add(acc.ID, det)
+			cache.Add(acc.ID, det)
 		}
 	}
 
-	saveAccounts(details)
+	saveBankDetails(cache)
 	return nil
-}
-
-// loadAccounts loads the cached account details.
-func loadAccounts() *DetailsMap {
-	fn := cross.ConfigName(AccountsName)
-	det := DetailsMap{}
-	err := LoadJSON(fn, &det)
-	if err != nil {
-		slog.Warn("Couldn't load accounts cache: %s. Proceeding with clean slate.", err.Error())
-	}
-
-	return &det
-}
-
-// saveAccounts saves the account details cache.
-func saveAccounts(det *DetailsMap) {
-	fn := cross.ConfigName(AccountsName)
-	err := SaveJSON(fn, det)
-	if err != nil {
-		slog.Error("Error saving account details: ", err.Error())
-		os.Exit(2)
-	}
 }
