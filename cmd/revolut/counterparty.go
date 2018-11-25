@@ -51,9 +51,14 @@ func (cmd *CPListCmd) Execute(args []string) error {
 		return nil
 	}
 
-	slog.Msg("%d counterparties:", len(*cache))
-	for k, _ := range *cache {
-		cp := cache.Get(k)
+	n := len(*cache)
+	if n == 1 {
+		slog.Msg("1 counterparty:")
+	} else {
+		slog.Msg("%d counterparties:", len(*cache))
+	}
+
+	for _, cp := range *cache {
 		displayCounterparty(cp, cmd.Short, cmd.Details)
 	}
 	return nil
