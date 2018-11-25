@@ -161,6 +161,9 @@ type ExternalAccount struct {
 // GetCounterparties returns a list of all counterparties for an API key.
 func (c *Client) GetCounterparties() ([]Counterparty, error) {
 	contents, code, err := c.GetJSON(epCounterparties)
+	if err != nil {
+		return nil, err
+	}
 
 	if code != 200 {
 		err = errors.New(codeToError(code))
