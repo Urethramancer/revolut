@@ -12,8 +12,9 @@ import (
 )
 
 type CounterpartyCmd struct {
-	List   CPListCmd   `command:"list" alias:"ls" description:"List counterparties."`
-	Get    CPGetCmd    `command:"get" description:"Get a counterparty by nickname or UUID."`
+	List   CPListCmd   `command:"list" alias:"ls" description:"List counterparties. Will fetch from cache if available."`
+	Update CPUpdateCmd `command:"update" alias:"up" description:"Update counterparty cache."`
+	Get    CPGetCmd    `command:"get" description:"Get a counterparty by nickname or UUID. Will fetch from cache if available."`
 	Add    CPAddCmd    `command:"add" description:"Add a new counterparty."`
 	Delete CPDeleteCmd `command:"delete" alias:"del" alias:"rm" description:"Delete a counterparty."`
 }
@@ -236,5 +237,12 @@ func (cmd *CPDeleteCmd) Execute(args []string) error {
 	}
 
 	slog.Msg("Counterparty deleted.")
+	return nil
+}
+
+// CPUpdateCmd refreshes the counterparty cache.
+type CPUpdateCmd struct{}
+
+func (cmd *CPUpdateCmd) Execute(args []string) error {
 	return nil
 }
