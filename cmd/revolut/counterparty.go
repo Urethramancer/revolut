@@ -121,6 +121,7 @@ func (cmd *CPGetCmd) Execute(args []string) error {
 		return nil
 	}
 
+	displayCounterparty(*cp, cmd.Short, cmd.Details)
 	return nil
 }
 
