@@ -16,6 +16,7 @@ const (
 
 var cfg Config
 
+// Config holds the permanent configuration.
 type Config struct {
 	// ProductionKey has access to the production API where changes actually matter.
 	ProductionKey string `json:"production_key"`

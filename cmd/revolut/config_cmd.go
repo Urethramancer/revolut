@@ -1,4 +1,4 @@
-// Configuration editing from command line.
+// Configuration editing from the command line.
 package main
 
 import (
@@ -103,6 +103,7 @@ func (cmd *SetAPICmd) Execute(args []string) error {
 // View settings.
 //
 
+// GetConfigCmd shows configuration settings.
 type GetConfigCmd struct {
 	GetProdKey GetProdKeyCmd `command:"prod" description:"Show production API key."`
 	GetSandKey GetSandKeyCmd `command:"sand" description:"Show sandbox API key."`
