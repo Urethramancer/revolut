@@ -7,7 +7,7 @@ This package gives you an SDK to access the [Revolut for Business](https://busin
 - Retrieve a list of accounts or individual account information
 - Add, remove and view counterparties (businesses and individuals you send money to)
 - Initiate/schedule/cancel payments and check their status
-- Get a list of transactions
+- Get transaction history
 - Transfer money between accounts
 - Add web-hooks and unmarshal their data
 
