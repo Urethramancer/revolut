@@ -28,7 +28,6 @@ type CPListCmd struct {
 func (cmd *CPListCmd) Execute(args []string) error {
 	c, err := newClient()
 	if err != nil {
-		slog.Msg("ERROR: %s", err.Error())
 		return err
 	}
 
