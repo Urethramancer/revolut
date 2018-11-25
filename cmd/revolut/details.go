@@ -2,6 +2,7 @@ package main
 
 import "github.com/Urethramancer/revolut"
 
+// DetailsMap is the structure for the bank details cache.
 type DetailsMap map[string]*[]revolut.BankDetails
 
 // HasID convenience function.

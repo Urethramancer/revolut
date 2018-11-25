@@ -30,7 +30,7 @@ type TransferResponse struct {
 	CompletedAt string `json:"completed_at"`
 }
 
-//  RequestTransfer transfers money between two of a business' accounts in the same currency.
+// RequestTransfer transfers money between two of a business' accounts in the same currency.
 func RequestTransfer() {
 
 }
@@ -176,6 +176,7 @@ func (c *Client) GetTransactionsRange(from, to time.Time, counterparty, ttype st
 
 }
 
+// GetTransaction returns a single transaction.
 func (c *Client) GetTransaction(id string) {
 
 }

@@ -161,6 +161,7 @@ type ExternalAccount struct {
 // GetCounterparties returns a list of all counterparties for an API key.
 func (c *Client) GetCounterparties() ([]Counterparty, error) {
 	contents, code, err := c.GetJSON(epCounterparties)
+	c.ErrorCode = code
 	if err != nil {
 		return nil, err
 	}
@@ -182,6 +183,7 @@ func (c *Client) GetCounterparties() ([]Counterparty, error) {
 // GetCounterparty gets a counterparty by ID.
 func (c *Client) GetCounterparty(id string) (*Counterparty, error) {
 	contents, code, err := c.GetJSON(epCounterparty + "/" + id)
+	c.ErrorCode = code
 	if err != nil {
 		return nil, err
 	}
@@ -203,6 +205,7 @@ func (c *Client) GetCounterparty(id string) (*Counterparty, error) {
 // AddRevolutCounterparty adds a Revolut personal or business account as a counterparty.
 func (c *Client) AddRevolutCounterparty(cp InternalCounterparty) (*CounterpartyResponse, error) {
 	contents, code, err := c.PostJSON(epCounterparty, cp)
+	c.ErrorCode = code
 	if err != nil {
 		return nil, err
 	}
@@ -237,6 +240,7 @@ func (c *Client) AddExternalCounterparty(cp ExternalCounterparty) (*ExternalCoun
 // DeleteCounterparty removes a counterparty by UUID.
 func (c *Client) DeleteCounterparty(id string) error {
 	code, err := c.Delete(epCounterparty + "/" + id)
+	c.ErrorCode = code
 	if err != nil {
 		return err
 	}

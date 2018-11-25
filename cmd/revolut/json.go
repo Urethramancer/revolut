@@ -43,6 +43,7 @@ type JSONCmd struct {
 // JSONCPCmd prints an empty ExternalCounterparty structure.
 type JSONCPCmd struct{}
 
+// Execute the structure display.
 func (cmd *JSONCPCmd) Execute(args []string) error {
 	use := "use if not a company"
 	name := revolut.IndividualName{

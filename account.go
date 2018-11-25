@@ -68,6 +68,10 @@ type EstimatedTime struct {
 // GetAccounts lists the accounts for a given API key.
 func (c *Client) GetAccounts() ([]Account, error) {
 	contents, code, err := c.GetJSON(epAccounts)
+	c.ErrorCode = code
+	if err != nil {
+		return nil, err
+	}
 
 	if code != 200 {
 		err = errors.New(codeToError(code))
@@ -91,6 +95,7 @@ func (c *Client) GetAccount(id string) (*Account, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	err = json.Unmarshal(contents, &acc)
 	return &acc, err
 }
@@ -103,6 +108,7 @@ func (c *Client) GetAccountDetails(id string) (*[]BankDetails, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	err = json.Unmarshal(contents, &det)
 	return &det, err
 }

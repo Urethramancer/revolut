@@ -10,6 +10,7 @@ import (
 	"github.com/Urethramancer/slog"
 )
 
+// AccountCmd holds tool commands for account viewing and management.
 type AccountCmd struct {
 	List   AccListCmd   `command:"list" alias:"ls" description:"List accounts."`
 	Update AccUpdateCmd `command:"update" alias:"up" description:"Refresh the bank details cache."`

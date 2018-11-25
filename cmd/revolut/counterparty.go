@@ -11,6 +11,7 @@ import (
 	"github.com/Urethramancer/slog"
 )
 
+// CounterpartyCmd holds tool commands for viewing and modifying counterparties.
 type CounterpartyCmd struct {
 	List   CPListCmd   `command:"list" alias:"ls" description:"List counterparties. Will fetch from cache if available."`
 	Update CPUpdateCmd `command:"update" alias:"up" description:"Update counterparty cache."`
@@ -244,6 +245,7 @@ func (cmd *CPDeleteCmd) Execute(args []string) error {
 // CPUpdateCmd refreshes the counterparty cache.
 type CPUpdateCmd struct{}
 
+// Execute the update command.
 func (cmd *CPUpdateCmd) Execute(args []string) error {
 	return nil
 }

@@ -5,6 +5,7 @@ import (
 	"github.com/jessevdk/go-flags"
 )
 
+// O holds option flags and arguments.
 var O struct {
 	//
 	// Tool commands
