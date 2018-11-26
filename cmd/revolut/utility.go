@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/Urethramancer/revolut"
@@ -13,7 +14,13 @@ func newClient() (*revolut.Client, error) {
 		key = cfg.SandboxKey
 	}
 
-	return revolut.NewClient(key)
+	c, err := revolut.NewClient(key)
+	if err != nil {
+		return nil, err
+	}
+
+	c.Agent = fmt.Sprintf("Revolut Go/%s", Version[1:])
+	return c, nil
 }
 
 // shortUUID shortens a UUID to the last element for display purposes.
