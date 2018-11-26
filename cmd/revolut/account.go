@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/Urethramancer/revolut"
@@ -27,31 +28,46 @@ type AccListCmd struct {
 
 // Execute lists the user's accounts.
 func (cmd *AccListCmd) Execute(args []string) error {
+	cache := loadBankDetails()
+
 	c, err := newClient()
 	if err != nil {
 		return err
 	}
 
-	list, err := c.GetAccounts()
+	accounts, err := c.GetAccounts()
 	if err != nil {
 		return err
 	}
 
-	details := loadBankDetails()
+	if len(*cache) == 0 {
 
-	slog.Msg("Accounts:")
-	for _, acc := range list {
-		id := acc.ID
-		if !details.HasID(id) {
-			det, err := c.GetAccountDetails(id)
+		if len(accounts) == 0 {
+			slog.Msg("No accounts to list.")
+			return nil
+		}
+
+		for _, acc := range accounts {
+			det, err := c.GetAccountDetails(acc.ID)
 			if err != nil {
 				return err
 			}
-			details.Add(id, det)
+			cache.Set(acc.ID, det)
 		}
+		saveBankDetails(cache)
+	}
 
+	var list []string
+	for k := range *cache {
+		list = append(list, k)
+	}
+	sort.Strings(list)
+
+	slog.Msg("Accounts:")
+	for _, acc := range accounts {
+		id := acc.ID
 		if cmd.Short {
-			a := strings.Split(acc.ID, "-")
+			a := strings.Split(id, "-")
 			id = a[4]
 		}
 		name := acc.Name
@@ -65,11 +81,9 @@ func (cmd *AccListCmd) Execute(args []string) error {
 
 		slog.Msg("%s (%s): %s - %f %s", id, acc.State, name, acc.Balance, acc.Currency)
 		if cmd.Details {
-			showDetails(details.Get(acc.ID))
+			showDetails(cache.Get(acc.ID))
 		}
 	}
-
-	saveBankDetails(details)
 	return nil
 }
 
@@ -167,7 +181,7 @@ func (cmd *AccUpdateCmd) Execute(args []string) error {
 			if err != nil {
 				return err
 			}
-			cache.Add(acc.ID, det)
+			cache.Set(acc.ID, det)
 		}
 	}
 
