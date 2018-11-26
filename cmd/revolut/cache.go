@@ -43,13 +43,13 @@ func (c *DetailsCache) Add(id string, det *[]revolut.BankDetails) {
 // loadBankDetails loads the cached account details.
 func loadBankDetails() *DetailsCache {
 	fn := cross.ConfigName(BankDetailsFile)
-	cache := DetailsCache{}
+	cache := &DetailsCache{}
 	err := LoadJSON(fn, cache)
 	if err != nil {
 		slog.Warn("Couldn't load bank details cache: %s. Proceeding with clean slate.", err.Error())
 	}
 
-	return &cache
+	return cache
 }
 
 // saveBankDetails saves the account details cache.
@@ -92,13 +92,13 @@ func (c *CounterpartyCache) Set(id string, cp *revolut.Counterparty) {
 // loadAccounts loads the cached account details.
 func loadCounterparties() *CounterpartyCache {
 	fn := cross.ConfigName(CounterpartiesFile)
-	cache := CounterpartyCache{}
-	err := LoadJSON(fn, &cache)
+	cache := &CounterpartyCache{}
+	err := LoadJSON(fn, cache)
 	if err != nil {
 		slog.Warn("Couldn't load counterparty cache: %s. Proceeding with clean slate.", err.Error())
 	}
 
-	return &cache
+	return cache
 }
 
 // saveAccounts saves the account details cache.
