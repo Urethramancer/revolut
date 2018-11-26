@@ -21,9 +21,8 @@ type AccountCmd struct {
 
 // AccListCmd is empty.
 type AccListCmd struct {
-	Short      bool   `short:"s" description:"Shorten IDs for display purposes."`
-	Details    bool   `short:"d" description:"Show details for each account."`
-	Currencies string `short:"c" description:"List only this comma-separated list of currencies."`
+	DefaultShowOptions
+	Currencies string `short:"c" description:"Show only this comma-separated list of currencies." value-name:"<CURRENCY,...>"`
 }
 
 // Execute lists the user's accounts.
@@ -107,10 +106,9 @@ func prDet(pre, x string) {
 
 // AccShowCmd shows one account.
 type AccShowCmd struct {
-	Short      bool   `short:"s" description:"Shorten IDs for display purposes."`
-	Details    bool   `short:"d" description:"Show details for each account."`
-	Currencies string `short:"c" description:"List only this comma-separated list of currencies."`
-	Args       struct {
+	DefaultShowOptions
+	CurrencyOptions
+	Args struct {
 		ID string `required:"true" positional-arg-name:"ID" description:"UUID of account to show."`
 	} `positional-args:"true"`
 }

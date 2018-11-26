@@ -22,8 +22,7 @@ type CounterpartyCmd struct {
 
 // CPListCmd shows a list of counterparties.
 type CPListCmd struct {
-	Short   bool `short:"s" description:"Shorten IDs for display purposes."`
-	Details bool `short:"d" description:"Show details for each account."`
+	DefaultShowOptions
 }
 
 // Execute the counterparty list command.
@@ -105,10 +104,9 @@ func displayCounterparty(cp *revolut.Counterparty, short, details bool) {
 
 // CPGetCmd gets one specific counterparty.
 type CPGetCmd struct {
-	JSON    bool `short:"j" long:"json" description:"Print the actual JSON structure instead of formatted information."`
-	Short   bool `short:"s" description:"Shorten IDs for display purposes."`
-	Details bool `short:"d" description:"Show details for each account."`
-	Args    struct {
+	JSON bool `short:"j" long:"json" description:"Print the actual JSON structure instead of formatted information."`
+	DefaultShowOptions
+	Args struct {
 		ID string `required:"true" positional-arg-name:"ID" description:"ID of a counterparty. If you specify a nickname instead, the counterparty is fetched from the cache."`
 	} `positional-args:"true"`
 }
