@@ -24,8 +24,7 @@ type Client struct {
 }
 
 const (
-	defaultAgent = "Revolut unofficial Go SDK"
-
+	defaultAgent  = "Revolut unofficial Go SDK"
 	urlSandbox    = "https://sandbox-b2b.revolut.com/api/1.0/"
 	urlProduction = "https://b2b.revolut.com/api/1.0/"
 )
@@ -34,7 +33,6 @@ const (
 	//
 	// API Endpoints
 	//
-	epAccount        = "account"
 	epAccounts       = "accounts"
 	epAccountDetails = "bank-details"
 	epCounterparties = "counterparties"
@@ -59,11 +57,11 @@ const (
 func NewClient(key string) (*Client, error) {
 	c := Client{}
 	c.Timeout = time.Second * 5
-	tr := &http.Transport{
+	c.Agent = defaultAgent
+	c.Transport = &http.Transport{
 		MaxIdleConns:        50,
 		MaxIdleConnsPerHost: 50,
 	}
-	c.Transport = tr
 	return &c, c.SetAPI(key)
 }
 
