@@ -61,11 +61,7 @@ func (cmd *AccListCmd) Execute(args []string) error {
 	}
 
 	slog.Msg("Accounts:")
-	for id, acc := range *acache {
-		if cmd.Short {
-			id = shortUUID(id)
-		}
-
+	for _, acc := range *acache {
 		if len(acc.Name) == 0 {
 			acc.Name = "<unnamed>"
 		}
@@ -74,7 +70,7 @@ func (cmd *AccListCmd) Execute(args []string) error {
 			continue
 		}
 
-		showAccount(&acc)
+		showAccount(&acc, cmd.Short)
 		if cmd.Details {
 			showDetails(dcache.Get(acc.ID))
 		}
@@ -82,7 +78,10 @@ func (cmd *AccListCmd) Execute(args []string) error {
 	return nil
 }
 
-func showAccount(acc *revolut.Account) {
+func showAccount(acc *revolut.Account, short bool) {
+	if short {
+		acc.ID = shortUUID(acc.ID)
+	}
 	slog.Msg("%s (%s): %s - %f %s", acc.ID, acc.State, acc.Name, acc.Balance, acc.Currency)
 }
 
