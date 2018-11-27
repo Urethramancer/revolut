@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"os"
 	"sort"
 
@@ -81,13 +82,18 @@ func (c *DetailsCache) Set(id string, list *[]revolut.BankDetails) {
 }
 
 // Load from file.
-func (c DetailsCache) Load(path string) error {
-	return LoadJSON(path, &c)
+func (c DetailsCache) Load() error {
+	fn := cross.ConfigName(DetailsFile)
+	if !cross.FileExists(fn) {
+		return errors.New("no existing bank details cache file")
+	}
+
+	return LoadJSON(fn, &c)
 }
 
 // Save to file.
-func (c DetailsCache) Save(path string) error {
-	return SaveJSON(path, c)
+func (c DetailsCache) Save() error {
+	return SaveJSON(cross.ConfigName(DetailsFile), c)
 }
 
 //
@@ -115,6 +121,21 @@ func (c *CounterpartyCache) Get(id string) *revolut.Counterparty {
 // Set the cached counterparty for an ID.
 func (c *CounterpartyCache) Set(id string, cp *revolut.Counterparty) {
 	(*c)[id] = cp
+}
+
+// Load from file.
+func (c CounterpartyCache) Load() error {
+	fn := cross.ConfigName(CounterpartiesFile)
+	if !cross.FileExists(fn) {
+		return errors.New("no existing counterparty cache file")
+	}
+
+	return LoadJSON(fn, &c)
+}
+
+// Save to file.
+func (c CounterpartyCache) Save(path string) error {
+	return SaveJSON(path, c)
 }
 
 // loadAccounts loads the cached account details.

@@ -32,7 +32,8 @@ func (cmd *CPListCmd) Execute(args []string) error {
 		return err
 	}
 
-	cache := loadCounterparties()
+	cache := &CounterpartyCache{}
+	cache.Load()
 	if len(*cache) == 0 {
 		list, err := c.GetCounterparties()
 		if err != nil {

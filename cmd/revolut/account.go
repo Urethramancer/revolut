@@ -40,9 +40,8 @@ func (cmd *AccListCmd) Execute(args []string) error {
 	}
 
 	dcache := &DetailsCache{}
-	dcachename := cross.ConfigName(DetailsFile)
-	if cross.FileExists(dcachename) {
-		err = dcache.Load(dcachename)
+	if cross.FileExists(cross.ConfigName(DetailsFile)) {
+		err = dcache.Load()
 		if err != nil {
 			return err
 		}
@@ -128,8 +127,7 @@ type AccShowCmd struct {
 // Execute the single-account listing.
 func (cmd *AccShowCmd) Execute(args []string) error {
 	dcache := DetailsCache{}
-	dcachename := cross.ConfigName(DetailsFile)
-	err := dcache.Load(dcachename)
+	err := dcache.Load()
 	if err != nil {
 		slog.Warn("Warning: %s", err.Error())
 	}
@@ -151,7 +149,7 @@ func (cmd *AccShowCmd) Execute(args []string) error {
 
 		// Save it to the cache
 		dcache.Set(cmd.Args.ID, det)
-		err = dcache.Save(dcachename)
+		err = dcache.Save()
 		if err != nil {
 			slog.Warn("Warning: %s", err.Error())
 		}
@@ -208,6 +206,6 @@ func updateDetailsCache() (*AccountCache, *DetailsCache, error) {
 		}
 	}
 
-	err = dcache.Save(cross.ConfigName(DetailsFile))
+	err = dcache.Save()
 	return acache, dcache, err
 }
