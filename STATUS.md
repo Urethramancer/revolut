@@ -6,7 +6,7 @@
 - Configuring keys without editing configuration file directly
 - Getting and caching the list of accounts for key, with bank details
 - View single account
-- List and cache counterparties and bank details
+- List and cache accounts, bank details and counterparties
 - Get one counterparty by ID and view plain info or the JSON form
 - Add Revolut counterparties via command line
 - Add external counterparties via JSON input file
