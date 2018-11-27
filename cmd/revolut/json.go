@@ -15,12 +15,7 @@ func LoadJSON(filename string, out interface{}) error {
 		return err
 	}
 
-	err = json.Unmarshal(data, out)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return json.Unmarshal(data, out)
 }
 
 // SaveJSON marshals, indents and saves a supplied structure to the specified file.
