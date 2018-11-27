@@ -10,8 +10,10 @@ import (
 const (
 	// ConfigFile contains the main settings.
 	ConfigFile = "config.json"
-	// BankDetailsFile is the name of the account cache.
-	BankDetailsFile = "accounts.json"
+	// AccountsFile is the name of the account cache.
+	AccountsFile = "accounts.json"
+	// DetailsFile is the name of the bank details cache.
+	DetailsFile = "details.json"
 	// CounterpartiesFile is the name of the counterparty cache.
 	CounterpartiesFile = "counterparties.json"
 )

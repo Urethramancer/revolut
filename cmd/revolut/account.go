@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"sort"
 	"strings"
+
+	"github.com/Urethramancer/cross"
 
 	"github.com/Urethramancer/revolut"
 	"github.com/Urethramancer/slog"
@@ -28,48 +29,43 @@ type AccListCmd struct {
 
 // Execute lists the user's accounts.
 func (cmd *AccListCmd) Execute(args []string) error {
-	cache := loadBankDetails()
-
-	c, err := newClient()
-	if err != nil {
-		return err
-	}
-
-	accounts, err := c.GetAccounts()
-	if err != nil {
-		return err
-	}
-
-	if len(*cache) == 0 {
-
-		if len(accounts) == 0 {
-			slog.Msg("No accounts to list.")
-			return nil
+	var err error
+	acache := &AccountCache{}
+	acachename := cross.ConfigName(AccountsFile)
+	if cross.FileExists(acachename) {
+		err = acache.Load(acachename)
+		if err != nil {
+			return err
 		}
+	}
 
-		for _, acc := range accounts {
-			det, err := c.GetAccountDetails(acc.ID)
-			if err != nil {
-				return err
-			}
-			cache.Set(acc.ID, det)
+	dcache := &DetailsCache{}
+	dcachename := cross.ConfigName(DetailsFile)
+	if cross.FileExists(dcachename) {
+		err = dcache.Load(dcachename)
+		if err != nil {
+			return err
 		}
-		saveBankDetails(cache)
 	}
 
-	var list []string
-	for k := range *cache {
-		list = append(list, k)
+	if acache.IsEmpty() {
+		acache, dcache, err = updateDetailsCache()
+		if err != nil {
+			return err
+		}
 	}
-	sort.Strings(list)
+
+	if acache.IsEmpty() {
+		slog.Msg("No accounts to list.")
+		return nil
+	}
 
 	slog.Msg("Accounts:")
-	for _, acc := range accounts {
-		id := acc.ID
+	for id, acc := range *acache {
 		if cmd.Short {
-			a := strings.Split(id, "-")
-			id = a[4]
+			id = shortUUID(id)
 		}
+
 		name := acc.Name
 		if len(name) == 0 {
 			name = "<unnamed>"
@@ -81,7 +77,7 @@ func (cmd *AccListCmd) Execute(args []string) error {
 
 		slog.Msg("%s (%s): %s - %f %s", id, acc.State, name, acc.Balance, acc.Currency)
 		if cmd.Details {
-			showDetails(cache.Get(acc.ID))
+			showDetails(dcache.Get(acc.ID))
 		}
 	}
 	return nil
@@ -129,11 +125,16 @@ type AccShowCmd struct {
 
 // Execute the single-account listing.
 func (cmd *AccShowCmd) Execute(args []string) error {
-	details := loadBankDetails()
+	dcache := DetailsCache{}
+	dcachename := cross.ConfigName(DetailsFile)
+	err := dcache.Load(dcachename)
+	if err != nil {
+		slog.Warn("Warning: %s", err.Error())
+	}
+
 	var det *[]revolut.BankDetails
-	var err error
-	if details.HasID(cmd.Args.ID) {
-		det = details.Get(cmd.Args.ID)
+	if dcache.HasID(cmd.Args.ID) {
+		det = dcache.Get(cmd.Args.ID)
 	} else {
 		var c *revolut.Client
 		c, err = newClient()
@@ -147,8 +148,11 @@ func (cmd *AccShowCmd) Execute(args []string) error {
 		}
 
 		// Save it to the cache
-		details.Set(cmd.Args.ID, det)
-		saveBankDetails(details)
+		dcache.Set(cmd.Args.ID, det)
+		err = dcache.Save(dcachename)
+		if err != nil {
+			slog.Warn("Warning: %s", err.Error())
+		}
 	}
 
 	showDetails(det)
@@ -164,27 +168,44 @@ type AccUpdateCmd struct{}
 
 // Execute the account details update.
 func (cmd *AccUpdateCmd) Execute(args []string) error {
+	_, _, err := updateDetailsCache()
+	return err
+}
+
+func updateDetailsCache() (*AccountCache, *DetailsCache, error) {
+	var err error
+	acache := &AccountCache{}
+	dcache := &DetailsCache{}
+
 	c, err := newClient()
 	if err != nil {
-		return err
+		return acache, dcache, err
 	}
 
-	list, err := c.GetAccounts()
+	accounts, err := c.GetAccounts()
 	if err != nil {
-		return err
+		return acache, dcache, err
 	}
 
-	cache := &DetailsCache{}
-	for _, acc := range list {
-		if !cache.HasID(acc.ID) {
-			det, err := c.GetAccountDetails(acc.ID)
+	for _, acc := range accounts {
+		acache.Set(acc.ID, acc)
+	}
+	err = acache.Save(cross.ConfigName(AccountsFile))
+	if err != nil {
+		return acache, dcache, err
+	}
+
+	for _, acc := range accounts {
+		if !dcache.HasID(acc.ID) {
+			var det *[]revolut.BankDetails
+			det, err = c.GetAccountDetails(acc.ID)
 			if err != nil {
-				return err
+				return acache, dcache, err
 			}
-			cache.Set(acc.ID, det)
+			dcache.Set(acc.ID, det)
 		}
 	}
 
-	saveBankDetails(cache)
-	return nil
+	err = dcache.Save(cross.ConfigName(DetailsFile))
+	return acache, dcache, err
 }
