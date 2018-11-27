@@ -66,21 +66,24 @@ func (cmd *AccListCmd) Execute(args []string) error {
 			id = shortUUID(id)
 		}
 
-		name := acc.Name
-		if len(name) == 0 {
-			name = "<unnamed>"
+		if len(acc.Name) == 0 {
+			acc.Name = "<unnamed>"
 		}
 
 		if !shouldDisplayCurrency(acc.Currency, cmd.Currencies) {
 			continue
 		}
 
-		slog.Msg("%s (%s): %s - %f %s", id, acc.State, name, acc.Balance, acc.Currency)
+		showAccount(&acc)
 		if cmd.Details {
 			showDetails(dcache.Get(acc.ID))
 		}
 	}
 	return nil
+}
+
+func showAccount(acc *revolut.Account) {
+	slog.Msg("%s (%s): %s - %f %s", acc.ID, acc.State, acc.Name, acc.Balance, acc.Currency)
 }
 
 func showDetails(det *[]revolut.BankDetails) {
