@@ -17,30 +17,30 @@ import (
 type AccountCache map[string]revolut.Account
 
 // IsEmpty checks if the map is empty.
-func (c AccountCache) IsEmpty() bool {
-	return len(c) == 0
+func (c *AccountCache) IsEmpty() bool {
+	return len(*c) == 0
 }
 
 // Contains checks if the cache contains the given ID.
-func (c AccountCache) Contains(id string) bool {
-	_, ok := c[id]
+func (c *AccountCache) Contains(id string) bool {
+	_, ok := (*c)[id]
 	return ok
 }
 
 // Get returns an account by ID.
-func (c AccountCache) Get(id string) interface{} {
-	return c[id]
+func (c *AccountCache) Get(id string) interface{} {
+	return (*c)[id]
 }
 
 // Set stores an account by ID.
-func (c AccountCache) Set(id string, acc revolut.Account) {
-	c[id] = acc
+func (c *AccountCache) Set(id string, acc revolut.Account) {
+	(*c)[id] = acc
 }
 
 // SortedList of accounts.
-func (c AccountCache) SortedList() []string {
+func (c *AccountCache) SortedList() []string {
 	var l []string
-	for k := range c {
+	for k := range *c {
 		l = append(l, k)
 	}
 	sort.Strings(l)
@@ -63,11 +63,6 @@ func (c AccountCache) Save(path string) error {
 
 // DetailsCache holds previously seen bank details.
 type DetailsCache map[string]*[]revolut.BankDetails
-
-// IsEmpty checks if the map is empty.
-func (c *DetailsCache) IsEmpty() bool {
-	return len(*c) == 0
-}
 
 // HasID convenience function.
 func (c *DetailsCache) HasID(id string) bool {
