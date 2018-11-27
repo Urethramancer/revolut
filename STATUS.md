@@ -16,4 +16,6 @@
 ## TODO
 - Payments and transactions
 - Webhooks
-- Better information in lists
+- Better/cleaner information in lists
+- Remove unnecessary information
+- Use nicknames for lookups
