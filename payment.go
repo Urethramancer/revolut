@@ -65,3 +65,15 @@ type PaymentStatus struct {
 	// Legs of the transaction. There will be 2 legs between your Revolut accounts and 1 in other cases.
 	Legs []Leg `json:"legs"`
 }
+
+// Card is used for card payments.
+type Card struct {
+	// Number is the masked card number.
+	Number string `json:"card_number"`
+	// First name of the card holder.
+	First string `json:"first_name"`
+	// Last name of the card holder.
+	Last string `json:"last_name"`
+	// Phone number of the card holder.
+	Phone string `json:"phone"`
+}
