@@ -85,6 +85,10 @@ func showAccount(acc *revolut.Account, short bool) {
 }
 
 func showDetails(det *[]revolut.BankDetails) {
+	if det == nil {
+		return
+	}
+
 	for _, d := range *det {
 		prDet("Account number:", d.AccountNo)
 		prDet("Sort code:", d.SortCode)
