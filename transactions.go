@@ -1,6 +1,11 @@
 package revolut
 
-import "time"
+import (
+	"strconv"
+	"strings"
+
+	"github.com/Urethramancer/slog"
+)
 
 // Merchant info.
 type Merchant struct {
@@ -12,6 +17,32 @@ type Merchant struct {
 	Category string `json:"category_code"`
 	// Country is the 3-letter ISO bank country code.
 	Country string `json:"country"`
+}
+
+// TransactionStatus is returned by GetTransaction() and GetTransactions().
+type TransactionStatus struct {
+	// ID of the transaction.
+	ID string `json:"id"`
+	// Type of transaction.
+	Type string `json:"type"`
+	// RequestID provided by the client.
+	RequestID string `json:"request_id"`
+	// State is one of "pending", "completed", "declined" or "failed".
+	State string `json:"state"`
+	// Reason code for the "declined" and "failed" states.
+	Reason string `json:"reason_code"`
+	// CreatedAt is an ISO date/time.
+	CreatedAt string `json:"created_at"`
+	// UpdatedAt is an ISO date/time. Available when looking up transactions.
+	UpdatedAt string `json:"updated_at,omitempty"`
+	// CompletedAt is an ISO date/time.
+	CompletedAt string `json:"completed_at,omitempty"`
+	// Scheduled time is an ISO date/time the transaction was scheduled to run.
+	ScheduledTime string `json:"scheduled_for"`
+	// Reference for the payment provided by the user.
+	Reference string `json:"reference"`
+	// Legs of the transaction. There will be 2 legs between your Revolut accounts and 1 in other cases.
+	Legs []Leg `json:"legs"`
 }
 
 // Leg of the transaction process.
