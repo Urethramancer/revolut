@@ -30,6 +30,11 @@ func (cmd *PayListCmd) Execute(args []string) error {
 		return err
 	}
 
+	if len(tr) == 0 {
+		slog.Msg("No transactions to show.")
+		return nil
+	}
+
 	for _, t := range tr {
 		displayTransaction(t, cmd.Short, cmd.Details)
 	}
