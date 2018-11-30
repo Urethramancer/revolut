@@ -105,7 +105,7 @@ func displayCounterparty(cp *revolut.Counterparty, short, details bool) {
 
 // CPGetCmd gets one specific counterparty.
 type CPGetCmd struct {
-	JSON bool `short:"j" long:"json" description:"Print the actual JSON structure instead of formatted information."`
+	JSONOption
 	DefaultShowOptions
 	Args struct {
 		ID string `required:"true" positional-arg-name:"ID" description:"ID of a counterparty. If you specify a nickname instead, the counterparty is fetched from the cache."`

@@ -20,3 +20,8 @@ type DefaultShowOptions struct {
 type CurrenciesOption struct {
 	Currencies string `short:"c" description:"List only this comma-separated list of currencies."`
 }
+
+// JSONOption is used by commands which can output formatted JSON structures.
+type JSONOption struct {
+	JSON bool `short:"j" long:"json" description:"Print the actual JSON structure instead of formatted information."`
+}
