@@ -26,7 +26,9 @@ type Config struct {
 	ProductionKey string `json:"production_key"`
 	// SandboxKey is for testing and experimenting.
 	SandboxKey string `json:"sandbox_key"`
-	UseSandbox bool   `json:"usesandbox"`
+	// LastRequest is a number to hash when generating payment request IDs.
+	LastRequest int64 `json:"last_request"`
+	UseSandbox  bool  `json:"usesandbox"`
 }
 
 // CreateConfig creates a default configuration file which will need the API keys changed.
