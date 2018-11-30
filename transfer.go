@@ -1,5 +1,9 @@
 package revolut
 
+import (
+	"encoding/json"
+)
+
 // TransferRequest for money transfers within a business.
 type TransferRequest struct {
 	// Amount to transfer.
@@ -26,4 +30,26 @@ type TransferResponse struct {
 	CreatedAt string `json:"created_at"`
 	// CompletedAt ISO date/time.
 	CompletedAt string `json:"completed_at"`
+}
+
+func (c *Client) Transfer(id, sid, tid, currency, reference string, amount float64) (*TransferResponse, error) {
+	var req TransferRequest
+	req.ID = id
+	req.SourceID = sid
+	req.TargetID = tid
+	req.Amount = amount
+	req.Currency = currency
+	req.Reference = reference
+	contents, code, err := c.PostJSON(epTransfer, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if code != 200 {
+		return nil, jsonError(contents)
+	}
+
+	var resp TransferResponse
+	err = json.Unmarshal(contents, &resp)
+	return &resp, err
 }
