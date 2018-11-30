@@ -2,12 +2,10 @@ package main
 
 import (
 	"errors"
-	"os"
 	"sort"
 
 	"github.com/Urethramancer/cross"
 	"github.com/Urethramancer/revolut"
-	"github.com/Urethramancer/slog"
 )
 
 //
@@ -134,28 +132,6 @@ func (c CounterpartyCache) Load() error {
 }
 
 // Save to file.
-func (c CounterpartyCache) Save(path string) error {
-	return SaveJSON(path, c)
-}
-
-// loadAccounts loads the cached account details.
-func loadCounterparties() *CounterpartyCache {
-	fn := cross.ConfigName(CounterpartiesFile)
-	cache := &CounterpartyCache{}
-	err := LoadJSON(fn, cache)
-	if err != nil {
-		slog.Warn("Couldn't load counterparty cache: %s. Proceeding with clean slate.", err.Error())
-	}
-
-	return cache
-}
-
-// saveAccounts saves the account details cache.
-func saveCounterparties(cache *CounterpartyCache) {
-	fn := cross.ConfigName(CounterpartiesFile)
-	err := SaveJSON(fn, &cache)
-	if err != nil {
-		slog.Error("Error saving counterparty cache: ", err.Error())
-		os.Exit(2)
-	}
+func (c CounterpartyCache) Save() error {
+	return SaveJSON(cross.ConfigName(CounterpartiesFile), c)
 }

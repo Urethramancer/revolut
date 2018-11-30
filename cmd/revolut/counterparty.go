@@ -43,7 +43,7 @@ func (cmd *CPListCmd) Execute(args []string) error {
 		for _, cp := range list {
 			cache.Set(cp.ID, &cp)
 		}
-		saveCounterparties(cache)
+		cache.Save()
 	}
 
 	if len(*cache) == 0 {
