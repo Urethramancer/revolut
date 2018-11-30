@@ -23,6 +23,14 @@ type Client struct {
 	bearer string
 }
 
+// ErrorResponse from JSON endpoints.
+type ErrorResponse struct {
+	// Message is a clarification of what went wrong.
+	Message string `json:"message"`
+	// Code is an internal error code.
+	Code int `json:"code"`
+}
+
 const (
 	defaultAgent  = "Revolut unofficial Go SDK"
 	urlSandbox    = "https://sandbox-b2b.revolut.com/api/1.0/"
@@ -156,4 +164,15 @@ func (c *Client) Delete(path string) (int, error) {
 // setHeader helper function.
 func (c *Client) setHeader(req *http.Request) {
 	req.Header.Set("Authorization", c.bearer)
+}
+
+// jsonError extracts the message from a JSON error response
+func jsonError(data []byte) error {
+	var resp ErrorResponse
+	err := json.Unmarshal(data, &resp)
+	if err != nil {
+		return err
+	}
+
+	return errors.New(resp.Message)
 }
