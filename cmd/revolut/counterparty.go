@@ -255,5 +255,20 @@ type CPUpdateCmd struct{}
 
 // Execute the update command.
 func (cmd *CPUpdateCmd) Execute(args []string) error {
+	c, err := newClient()
+	if err != nil {
+		return err
+	}
+
+	cache := &CounterpartyCache{}
+	list, err := c.GetCounterparties()
+	if err != nil {
+		return err
+	}
+
+	for _, cp := range list {
+		cache.Set(cp.ID, &cp)
+	}
+	cache.Save()
 	return nil
 }
