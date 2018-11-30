@@ -1,10 +1,10 @@
 package revolut
 
 import (
+	"encoding/json"
+	"errors"
 	"strconv"
 	"strings"
-
-	"github.com/Urethramancer/slog"
 )
 
 // Merchant info.
@@ -120,8 +120,14 @@ func (c *Client) GetTransactions(ttype, from, to, counterparty string, count int
 	if err != nil {
 		return nil, err
 	}
-	slog.Msg("%d %s", code, contents)
-	return nil, nil
+
+	if code != 200 {
+		return nil, errors.New(codeToError(code))
+	}
+
+	var list []TransactionStatus
+	err = json.Unmarshal(contents, &list)
+	return list, nil
 }
 
 // GetTransaction returns a single transaction.
