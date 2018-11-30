@@ -118,7 +118,7 @@ func prDet(pre, x string) {
 // AccShowCmd shows one account.
 type AccShowCmd struct {
 	DefaultShowOptions
-	CurrencyOptions
+	CurrenciesOption
 	Args struct {
 		ID string `required:"true" positional-arg-name:"ID" description:"UUID of account to show."`
 	} `positional-args:"true"`

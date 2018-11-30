@@ -2,7 +2,7 @@ package main
 
 // PaymentCmd contains all the payment and transaction commands.
 type PaymentCmd struct {
-	List PayListCmd `command:"list" alias:"ls" description:"List payment history with optional filters."`
+	List PayListCmd `command:"list" alias:"ls" description:"List payment/transaction history with optional filters."`
 }
 
 // PayListCmd shows payments and/or internal transactions.
