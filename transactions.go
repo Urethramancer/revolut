@@ -129,8 +129,3 @@ func (c *Client) GetTransactions(ttype, from, to, counterparty string, count int
 	err = json.Unmarshal(contents, &list)
 	return list, err
 }
-
-// GetTransaction returns a single transaction.
-func (c *Client) GetTransaction(id string) {
-
-}
