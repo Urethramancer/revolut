@@ -30,7 +30,7 @@ type AccListCmd struct {
 // Execute lists the user's accounts.
 func (cmd *AccListCmd) Execute(args []string) error {
 	var err error
-	acache := &AccountCache{}
+	acache := AccountCache{}
 	acachename := cross.ConfigName(AccountsFile)
 	if cross.FileExists(acachename) {
 		err = acache.Load(acachename)
@@ -39,7 +39,7 @@ func (cmd *AccListCmd) Execute(args []string) error {
 		}
 	}
 
-	dcache := &DetailsCache{}
+	dcache := DetailsCache{}
 	if cross.FileExists(cross.ConfigName(DetailsFile)) {
 		err = dcache.Load()
 		if err != nil {
@@ -60,7 +60,7 @@ func (cmd *AccListCmd) Execute(args []string) error {
 	}
 
 	slog.Msg("Accounts:")
-	for _, acc := range *acache {
+	for _, acc := range acache {
 		if len(acc.Name) == 0 {
 			acc.Name = "<unnamed>"
 		}
@@ -84,12 +84,12 @@ func showAccount(acc *revolut.Account, short bool) {
 	slog.Msg("%s (%s): %s - %f %s", acc.ID, acc.State, acc.Name, acc.Balance, acc.Currency)
 }
 
-func showDetails(det *[]revolut.BankDetails) {
+func showDetails(det []revolut.BankDetails) {
 	if det == nil {
 		return
 	}
 
-	for _, d := range *det {
+	for _, d := range det {
 		prDet("Account number:", d.AccountNo)
 		prDet("Sort code:", d.SortCode)
 		prDet("IBAN:", d.IBAN)
@@ -136,7 +136,7 @@ func (cmd *AccShowCmd) Execute(args []string) error {
 		slog.Warn("Warning: %s", err.Error())
 	}
 
-	var det *[]revolut.BankDetails
+	var det []revolut.BankDetails
 	if dcache.HasID(cmd.Args.ID) {
 		det = dcache.Get(cmd.Args.ID)
 	} else {
@@ -176,10 +176,10 @@ func (cmd *AccUpdateCmd) Execute(args []string) error {
 	return err
 }
 
-func updateDetailsCache() (*AccountCache, *DetailsCache, error) {
+func updateDetailsCache() (AccountCache, DetailsCache, error) {
 	var err error
-	acache := &AccountCache{}
-	dcache := &DetailsCache{}
+	acache := AccountCache{}
+	dcache := DetailsCache{}
 
 	c, err := newClient()
 	if err != nil {
@@ -201,7 +201,7 @@ func updateDetailsCache() (*AccountCache, *DetailsCache, error) {
 
 	for _, acc := range accounts {
 		if !dcache.HasID(acc.ID) {
-			var det *[]revolut.BankDetails
+			var det []revolut.BankDetails
 			det, err = c.GetAccountDetails(acc.ID)
 			if err != nil {
 				return acache, dcache, err

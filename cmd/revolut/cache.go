@@ -61,7 +61,7 @@ func (c AccountCache) Save(path string) error {
 //
 
 // DetailsCache holds previously seen bank details.
-type DetailsCache map[string]*[]revolut.BankDetails
+type DetailsCache map[string][]revolut.BankDetails
 
 // HasID convenience function.
 func (c *DetailsCache) HasID(id string) bool {
@@ -70,12 +70,12 @@ func (c *DetailsCache) HasID(id string) bool {
 }
 
 // Get the details for an ID.
-func (c *DetailsCache) Get(id string) *[]revolut.BankDetails {
+func (c *DetailsCache) Get(id string) []revolut.BankDetails {
 	return (*c)[id]
 }
 
 // Set the details list for an ID.
-func (c *DetailsCache) Set(id string, list *[]revolut.BankDetails) {
+func (c *DetailsCache) Set(id string, list []revolut.BankDetails) {
 	(*c)[id] = list
 }
 
