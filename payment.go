@@ -55,7 +55,7 @@ type PaymentStatus struct {
 	// UpdatedAt is an ISO date/time. Available when looking up transactions.
 	UpdatedAt string `json:"updated_at,omitempty"`
 	// CompletedAt is an ISO date/time.
-	CompletedAt string `json:"completed_at"`
+	CompletedAt string `json:"completed_at,omitempty"`
 	// Scheduled time is an ISO date/time the transaction was scheduled to run.
 	ScheduledTime string `json:"scheduled_for"`
 	// Merchant info.
