@@ -1,7 +1,9 @@
 package main
 
 import (
+	"crypto/sha1"
 	"fmt"
+	"io"
 	"strings"
 
 	"github.com/Urethramancer/revolut"
@@ -43,4 +45,17 @@ func shouldDisplayCurrency(currency, list string) bool {
 	}
 
 	return false
+}
+
+// generateRequestID returns a string based on the last request ID in the configuration.
+// We're just going for a boring, old SHA1 hash. It could easily be replaced with any hash,
+// but this should be sufficient for uniqueness within one user's payments.
+func generateRequestID() string {
+	cfg.LastRequest++
+	SaveConfig()
+	id := fmt.Sprintf("%s%d", programName, cfg.LastRequest)
+	h := sha1.New()
+	io.WriteString(h, id)
+	id = fmt.Sprintf("%x", h.Sum(nil))
+	return id
 }
