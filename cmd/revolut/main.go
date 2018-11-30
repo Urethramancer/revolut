@@ -17,6 +17,7 @@ var O struct {
 	Payment      PaymentCmd      `command:"payments" alias:"pay" description:"Payments and transactions."`
 	Webhooks     WebhooksCmd     `command:"webhooks" alias:"web" description:"Webhook listing and management."`
 	JSON         JSONCmd         `command:"json" description:"Print example data structures for JSON input."`
+	Cache        CacheCmd        `command:"cache" description:"Cache manipulation."`
 }
 
 // Execute creates a new configuration file.
