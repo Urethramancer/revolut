@@ -75,27 +75,53 @@ type LegCounterparty struct {
 	AccountID string `json:"account_id"`
 }
 
-// Card is used for card payments.
-type Card struct {
-	// Number is the masked card number.
-	Number string `json:"card_number"`
-	// First name of the card holder.
-	First string `json:"first_name"`
-	// Last name of the card holder.
-	Last string `json:"last_name"`
-	// Phone number of the card holder.
-	Phone string `json:"phone"`
-}
+// GetTransactions by optional filters. The from and to datescan be in the formats
+// YYYY-MM-DD or RFC3339.
+func (c *Client) GetTransactions(ttype, from, to, counterparty string, count int64) ([]TransactionStatus, error) {
+	var args strings.Builder
+	if count > 0 {
+		args.WriteString("count=")
+		arg := strconv.FormatInt(count, 10)
+		args.WriteString(arg)
+	}
 
-// GetTransactions gets all transactions, limited by optional counts, counterparty and type.
-// Returns 100 records if count is left at zero.
-func (c *Client) GetTransactions(counterparty, ttype string, count int) {
+	if len(ttype) > 0 {
+		if args.Len() > 0 {
+			args.WriteString("&")
+		}
+		args.WriteString("type=")
+		args.WriteString(ttype)
+	}
 
-}
+	if len(from) > 0 {
+		if args.Len() > 0 {
+			args.WriteString("&")
+		}
+		args.WriteString("from=")
+		args.WriteString(from)
+	}
 
-// GetTransactionsRange gets a list of transactions for a timespan, up to an optional limit.
-func (c *Client) GetTransactionsRange(from, to time.Time, counterparty, ttype string, count int) {
+	if len(to) > 0 {
+		if args.Len() > 0 {
+			args.WriteString("&")
+		}
+		args.WriteString("to=")
+		args.WriteString(to)
+	}
 
+	var url strings.Builder
+	url.WriteString(epTransactions)
+	if args.Len() > 0 {
+		url.WriteString("?")
+		url.WriteString(args.String())
+	}
+
+	contents, code, err := c.GetJSON(url.String())
+	if err != nil {
+		return nil, err
+	}
+	slog.Msg("%d %s", code, contents)
+	return nil, nil
 }
 
 // GetTransaction returns a single transaction.
