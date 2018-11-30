@@ -32,6 +32,7 @@ type TransferResponse struct {
 	CompletedAt string `json:"completed_at"`
 }
 
+// Transfer money between own accounts.
 func (c *Client) Transfer(id, sid, tid, currency, reference string, amount float64) (*TransferResponse, error) {
 	var req TransferRequest
 	req.ID = id
