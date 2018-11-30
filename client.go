@@ -83,8 +83,10 @@ func (c *Client) SetAPI(key string) error {
 
 // GetJSON builds the full endpoint path and gets the raw JSON.
 func (c *Client) GetJSON(path string) ([]byte, int, error) {
-	url := strings.Join([]string{c.baseURL, path}, "")
-	req, err := http.NewRequest("GET", url, nil)
+	var url strings.Builder
+	url.WriteString(c.baseURL)
+	url.WriteString(path)
+	req, err := http.NewRequest("GET", url.String(), nil)
 	if err != nil {
 		return nil, 0, err
 	}
