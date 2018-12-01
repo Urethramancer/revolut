@@ -45,34 +45,6 @@ type PaymentResponse struct {
 	CompletedAt string `json:"completed_at"`
 }
 
-// PaymentStatus for transaction ID or request ID.
-type PaymentStatus struct {
-	// ID of the transaction.
-	ID string `json:"id"`
-	// Type of transaction.
-	Type string `json:"type"`
-	// RequestID provided by the client.
-	RequestID string `json:"request_id"`
-	// State is one of "pending", "completed", "declined" or "failed".
-	State string `json:"state"`
-	// Reason code for the "declined" and "failed" states.
-	Reason string `json:"reason_code"`
-	// CreatedAt is an ISO date/time.
-	CreatedAt string `json:"created_at"`
-	// UpdatedAt is an ISO date/time. Available when looking up transactions.
-	UpdatedAt string `json:"updated_at,omitempty"`
-	// CompletedAt is an ISO date/time.
-	CompletedAt string `json:"completed_at,omitempty"`
-	// Scheduled time is an ISO date/time the transaction was scheduled to run.
-	ScheduledTime string `json:"scheduled_for"`
-	// Merchant info.
-	Merchant Merchant `json:"merchant"`
-	// Reference for the payment provided by the user.
-	Reference string `json:"reference"`
-	// Legs of the transaction. There will be 2 legs between your Revolut accounts and 1 in other cases.
-	Legs []Leg `json:"legs"`
-}
-
 // Card is used for card payments.
 type Card struct {
 	// Number is the masked card number.

@@ -14,6 +14,8 @@ type PaymentCmd struct {
 	List PayListCmd `command:"list" alias:"ls" description:"List payment/transaction history with optional filters."`
 	// Send money
 	Send PaySendCmd `command:"send" description:"Send money/pay a counterparty."`
+	// Show status
+	Show PayShowCmd `command:"show" alias:"status" description:"Show the status of a payment."`
 }
 
 // PayListCmd shows payments and/or internal transactions.
@@ -111,5 +113,29 @@ func (cmd *PaySendCmd) Execute(args []string) error {
 	}
 
 	slog.Msg("Created payment %s: %s", resp.ID, resp.State)
+	return nil
+}
+
+// PayShowCmd shows a single transaction.
+type PayShowCmd struct {
+	ShortOption
+	DetailsOption
+	Args struct {
+		ID string `required:"true" positional-arg-name:"TRANSACTION" description:"UUID of a transaction."`
+	} `positional-args:"true"`
+}
+
+func (cmd *PayShowCmd) Execute(args []string) error {
+	c, err := newClient()
+	if err != nil {
+		return err
+	}
+
+	resp, err := c.TransactionStatus(cmd.Args.ID)
+	if err != nil {
+		return err
+	}
+
+	displayTransaction(*resp, cmd.Short, cmd.Details)
 	return nil
 }

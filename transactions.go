@@ -2,7 +2,6 @@ package revolut
 
 import (
 	"encoding/json"
-	"errors"
 	"strconv"
 	"strings"
 )
@@ -39,6 +38,8 @@ type TransactionStatus struct {
 	CompletedAt string `json:"completed_at,omitempty"`
 	// Scheduled time is an ISO date/time the transaction was scheduled to run.
 	ScheduledTime string `json:"scheduled_for"`
+	// Merchant info.
+	Merchant Merchant `json:"merchant"`
 	// Reference for the payment provided by the user.
 	Reference string `json:"reference"`
 	// Legs of the transaction. There will be 2 legs between your Revolut accounts and 1 in other cases.
@@ -122,10 +123,26 @@ func (c *Client) GetTransactions(ttype, from, to, counterparty string, count int
 	}
 
 	if code != 200 {
-		return nil, errors.New(codeToError(code))
+		return nil, jsonError(contents)
 	}
 
 	var list []TransactionStatus
 	err = json.Unmarshal(contents, &list)
 	return list, err
+}
+
+// TransactionStatus of transfers or payments.
+func (c *Client) TransactionStatus(id string) (*TransactionStatus, error) {
+	contents, code, err := c.GetJSON(epTransaction + "/" + id)
+	if err != nil {
+		return nil, err
+	}
+
+	if code != 200 {
+		return nil, jsonError(contents)
+	}
+
+	var resp TransactionStatus
+	err = json.Unmarshal(contents, &resp)
+	return &resp, err
 }
