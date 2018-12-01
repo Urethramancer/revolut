@@ -99,7 +99,7 @@ func (c DetailsCache) Save() error {
 //
 
 // CounterpartyCache holds previously seen counterparties.
-type CounterpartyCache map[string]*revolut.Counterparty
+type CounterpartyCache map[string]revolut.Counterparty
 
 // HasID convenience function.
 func (c *CounterpartyCache) HasID(id string) bool {
@@ -112,12 +112,12 @@ func (c *CounterpartyCache) HasID(id string) bool {
 }
 
 // Get the cached counterparty for an ID.
-func (c *CounterpartyCache) Get(id string) *revolut.Counterparty {
+func (c *CounterpartyCache) Get(id string) revolut.Counterparty {
 	return (*c)[id]
 }
 
 // Set the cached counterparty for an ID.
-func (c *CounterpartyCache) Set(id string, cp *revolut.Counterparty) {
+func (c *CounterpartyCache) Set(id string, cp revolut.Counterparty) {
 	(*c)[id] = cp
 }
 
