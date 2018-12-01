@@ -34,7 +34,7 @@ type PayListCmd struct {
 
 // Execute the transaction listing.
 func (cmd *PayListCmd) Execute(args []string) error {
-	if cmd.To != "" && !validTransactionType(cmd.Type) {
+	if cmd.To != "" && !revolut.ValidTransactionType(cmd.Type) {
 		slog.Msg("Type must be one of atm, card_payment, card_refund, card_chargeback, card_credit, exchange, transfer, loan, fee, refund, topup, topup_return, tax or tax_refund.")
 		return nil
 	}
