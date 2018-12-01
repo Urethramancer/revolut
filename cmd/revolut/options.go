@@ -25,3 +25,8 @@ type CurrenciesOption struct {
 type JSONOption struct {
 	JSON bool `short:"j" long:"json" description:"Print the actual JSON structure instead of formatted information."`
 }
+
+// ReferenceOption is used on transactions from your accounts.
+type ReferenceOption struct {
+	Reference string `short:"r" long:"reference" descripttion:"Optional reference to show on the transaction." value-name:"TEXT"`
+}

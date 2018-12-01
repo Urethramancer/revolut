@@ -41,7 +41,7 @@ func (cmd *CPListCmd) Execute(args []string) error {
 		}
 
 		for _, cp := range list {
-			cache.Set(cp.ID, &cp)
+			cache.Set(cp.ID, cp)
 		}
 		cache.Save()
 	}
@@ -59,7 +59,7 @@ func (cmd *CPListCmd) Execute(args []string) error {
 	}
 
 	for _, cp := range *cache {
-		displayCounterparty(cp, cmd.Short, cmd.Details)
+		displayCounterparty(&cp, cmd.Short, cmd.Details)
 	}
 	return nil
 }
@@ -154,12 +154,14 @@ type CPAddRevolutCmd struct {
 // Execute the add Revolut counterparty command.
 func (cmd *CPAddRevolutCmd) Execute(args []string) error {
 	cp := revolut.InternalCounterparty{}
+	cp.Email = cmd.Email
+	cp.Name = cmd.Name
+	cp.Phone = cmd.Phone
 	if cmd.Business {
 		if len(cmd.Email) == 0 {
 			return errors.New("e-mail is required for business accounts")
 		}
 		cp.ProfileType = "business"
-		cp.Email = cmd.Email
 	} else {
 		if len(cmd.Name) == 0 {
 			return errors.New("a name is required for a personal account")
@@ -168,8 +170,6 @@ func (cmd *CPAddRevolutCmd) Execute(args []string) error {
 			return errors.New("a phone number is required for a personal account")
 		}
 		cp.ProfileType = "personal"
-		cp.Name = cmd.Name
-		cp.Phone = cmd.Phone
 	}
 
 	c, err := newClient()
@@ -267,7 +267,7 @@ func (cmd *CPUpdateCmd) Execute(args []string) error {
 	}
 
 	for _, cp := range list {
-		cache.Set(cp.ID, &cp)
+		cache.Set(cp.ID, cp)
 	}
 	cache.Save()
 	return nil
