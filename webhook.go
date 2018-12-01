@@ -1,5 +1,6 @@
 package revolut
 
+// WebhookRequest only holds the URL to add.
 type WebhookRequest struct {
 	// URL must be secure.
 	URL string `json:"url"`

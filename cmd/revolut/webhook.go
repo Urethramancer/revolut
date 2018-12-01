@@ -9,6 +9,7 @@ type WebhookCmd struct {
 	} `positional-args:"true"`
 }
 
+// Execute the webhook addition.
 func (cmd *WebhookCmd) Execute(args []string) error {
 	c, err := newClient()
 	if err != nil {
