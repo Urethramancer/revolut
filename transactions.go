@@ -76,6 +76,60 @@ type LegCounterparty struct {
 	AccountID string `json:"account_id"`
 }
 
+// TransactionCreatedEvent is posted to webooks when a new transaction has been created.
+type TransactionCreatedEvent struct {
+	// Event is the event name ("TransactionCreated").
+	Event string `json:"event"`
+	// Timestamp is the RFC3339 date and time of this event.
+	Timestamp string `json:"timestamp"`
+	// Data is the real payload.
+	Data TransactionCreatedData `json:"data"`
+}
+
+// TransactionCreatedData is the create event payload.
+type TransactionCreatedData struct {
+	// ID of the transaction.
+	ID string `json:"id"`
+	// Type of transaction.
+	Type string `json:"type"`
+	// RequestID provided by the client.
+	RequestID string `json:"request_id"`
+	// State of the transaction.
+	State string `json:"state"`
+	// Reason for failure.
+	Reason string `json:"reason_code,omitempty"`
+	// CreatedAt timestamp.
+	CreatedAt string `json:"created_at,omitempty"`
+	// UpdatedAt timestamp.
+	UpdatedAt string `json:"updated_at,omitempty"`
+	// CompletedAt timestamp.
+	CompletedAt string `json:"completed_at,omitempty"`
+	// Reference
+	Reference string `json:"reference,omitempty"`
+	// Legs of the route
+	Legs []Leg `json:"legs,omitempty"`
+}
+
+// TransactionChangedEvent is posted to webhooks when a transaction has updated.
+type TransactionChangedEvent struct {
+	// Event is the event name ("TransactionCreated").
+	Event string `json:"event"`
+	// Timestamp is the RFC3339 date and time of this event.
+	Timestamp string `json:"timestamp"`
+	// Data is the real payload.
+	Data TransactionChangedData `json:"data"`
+}
+
+// TransactionChangedData is the change event payload.
+type TransactionChangedData struct {
+	// ID of the transaction.
+	ID string `json:"id"`
+	// OldState before this event.
+	OldState string `json:"old_state"`
+	// NewState after this event. Expected states are "pending", "completed", "declined" or "failed".
+	NewState string `json:"new_state"`
+}
+
 // GetTransactions by optional filters. The from and to datescan be in the formats
 // YYYY-MM-DD or RFC3339.
 func (c *Client) GetTransactions(ttype, from, to, counterparty string, count int64) ([]TransactionStatus, error) {
