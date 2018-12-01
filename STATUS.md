@@ -12,9 +12,11 @@
 - Add external counterparties via JSON input file
 - View example of said JSON structure
 - Delete counterparties
+- View transactions and transfer between own accounts
+- Pay Revolut/external counterparties
 
 ## TODO
-- Payments and transactions
+- Finish payments (status checking, cancellation)
 - Webhooks
 - Better/cleaner information in lists
 - Remove unnecessary information
