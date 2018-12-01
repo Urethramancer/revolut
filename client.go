@@ -46,7 +46,7 @@ const (
 	epCounterparties = "counterparties"
 	epCounterparty   = "counterparty"
 	epTransfer       = "transfer"
-	epPayment        = "pay"
+	epPay            = "pay"
 	epCancel         = "transaction"
 	epTransactions   = "transactions"
 	epWebhook        = "webhook"
