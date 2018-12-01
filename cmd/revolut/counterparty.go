@@ -233,7 +233,7 @@ type CPDeleteCmd struct {
 	} `positional-args:"true"`
 }
 
-// Execute the delete command.
+// Execute the removal.
 func (cmd *CPDeleteCmd) Execute(args []string) error {
 	c, err := newClient()
 	if err != nil {
@@ -253,7 +253,7 @@ func (cmd *CPDeleteCmd) Execute(args []string) error {
 // CPUpdateCmd refreshes the counterparty cache.
 type CPUpdateCmd struct{}
 
-// Execute the update command.
+// Execute the update.
 func (cmd *CPUpdateCmd) Execute(args []string) error {
 	c, err := newClient()
 	if err != nil {

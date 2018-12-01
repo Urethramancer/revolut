@@ -125,6 +125,7 @@ type PayShowCmd struct {
 	} `positional-args:"true"`
 }
 
+// Execute the transaction display.
 func (cmd *PayShowCmd) Execute(args []string) error {
 	c, err := newClient()
 	if err != nil {

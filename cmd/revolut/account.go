@@ -128,7 +128,7 @@ type AccShowCmd struct {
 	} `positional-args:"true"`
 }
 
-// Execute the single-account listing.
+// Execute the single-account display.
 func (cmd *AccShowCmd) Execute(args []string) error {
 	dcache := DetailsCache{}
 	err := dcache.Load()
