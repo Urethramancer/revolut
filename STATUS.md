@@ -13,11 +13,10 @@
 - View example of said JSON structure
 - Delete counterparties
 - View transactions and transfer between own accounts
-- Pay Revolut/external counterparties
+- Pay Revolut/external counterparties abd check status of payment
 
 ## TODO
-- Finish payments (status checking, cancellation)
+- Finish payment cancellation
 - Webhooks
-- Better/cleaner information in lists
-- Remove unnecessary information
+- Better/cleaner information in lists, removing unnecessary text
 - Use nicknames for lookups
