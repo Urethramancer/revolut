@@ -16,7 +16,7 @@ var O struct {
 	Counterparty CounterpartyCmd `command:"counterparty" alias:"cp" description:"Counterparty listing and management."`
 	Transfer     TransferCmd     `command:"transfer" alias:"tr" description:"Transfer between your own accounts."`
 	Payment      PaymentCmd      `command:"payments" alias:"pay" description:"Payments and transactions."`
-	Webhooks     WebhooksCmd     `command:"webhooks" alias:"web" description:"Webhook listing and management."`
+	Webhook      WebhookCmd      `command:"webhooks" alias:"web" description:"Webhook listing and management."`
 	JSON         JSONCmd         `command:"json" description:"Print example data structures for JSON input."`
 	Cache        CacheCmd        `command:"cache" description:"Cache manipulation."`
 }
