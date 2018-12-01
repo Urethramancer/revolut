@@ -60,15 +60,6 @@ func (cmd *PayListCmd) Execute(args []string) error {
 	return nil
 }
 
-func validTransactionType(t string) bool {
-	switch t {
-	case "atm", "card_payment", "card_refund", "card_chargeback", "card_credit", "exchange", "transfer", "loan", "fee", "refund", "topup", "topup_return", "tax", "tax_refund":
-		return true
-	}
-
-	return false
-}
-
 func displayTransaction(t revolut.TransactionStatus, short, details bool) {
 	id := t.ID
 	if short {

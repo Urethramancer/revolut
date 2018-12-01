@@ -16,3 +16,12 @@ func ValidKey(s string) bool {
 
 	return false
 }
+
+func validTransactionType(t string) bool {
+	switch t {
+	case "atm", "card_payment", "card_refund", "card_chargeback", "card_credit", "exchange", "transfer", "loan", "fee", "refund", "topup", "topup_return", "tax", "tax_refund":
+		return true
+	}
+
+	return false
+}
