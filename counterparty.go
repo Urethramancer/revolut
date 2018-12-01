@@ -211,8 +211,7 @@ func (c *Client) AddRevolutCounterparty(cp InternalCounterparty) (*CounterpartyR
 	}
 
 	if code != 200 {
-		err = errors.New(codeToError(code))
-		return nil, err
+		return nil, jsonError(contents)
 	}
 
 	var res CounterpartyResponse
@@ -228,8 +227,7 @@ func (c *Client) AddExternalCounterparty(cp ExternalCounterparty) (*ExternalCoun
 	}
 
 	if code != 200 {
-		err = errors.New(codeToError(code))
-		return nil, err
+		return nil, jsonError(contents)
 	}
 
 	var res ExternalCounterpartyResponse
