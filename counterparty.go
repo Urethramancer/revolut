@@ -55,11 +55,11 @@ type InternalCounterparty struct {
 	// ProfileType is "business" or "personal".
 	ProfileType string `json:"profile_type"`
 	// Name of the counterparty.
-	Name string `json:"name"`
+	Name string `json:"name,omitempty"`
 	// Phone is used with personal accounts.
-	Phone string `json:"phone"`
+	Phone string `json:"phone,omitempty"`
 	// Email is an optional field with the address of the admin for a business account.
-	Email string `json:"email"`
+	Email string `json:"email,omitempty"`
 }
 
 // CounterpartyResponse is returned after adding/removing a Revolut counterparty.
