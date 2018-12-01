@@ -51,3 +51,31 @@ Continuing from the code above, you could do this to get a slice of bank details
 ```go
 details := c.GetAccountDetails(list[0].ID)
 ```
+
+### Transferring between own accounts
+
+This transfers money within accounts on one API key:
+```go
+// Custom request ID, source account, destination account, currency, optional message, amount
+resp, err := c.Transfer("2cbd8cd60026c6b03f8c576c81f9a39dcf251e2b.", "374e6066-3830-4000-abbf-b2e240349000", "a4f9667b-4435-4dea-bad5-74cc4de9c2bf", "GBP, "I like GBP better", 200000)
+```
+
+The response is a TransferResponse, containing a new UUID for this request and its status. The reason field will contain an explanation if status is anything but "completed". Note that the currency must match the currency of the receiving account. You can't transfer GBP to an account set to USD.
+
+### Retrieve counterparties
+
+Paying external recipients (counterparties) can be done like this:
+```go
+resp, err := c.Pay(id, cmd.Args.Account, cmd.Args.Counterparty, cmd.RecAccount, cmd.Args.Currency, cmd.Reference, cmd.ScheduleTime, cmd.Args.Amount)
+```
+
+The response is a PaymentResponse, similar to transfers.
+
+### List transactions
+
+All transfers and payments can be retrieved, optionally filtered by start and end dates, the receiving counterparty, a type of transaction and maximum number to show:
+```go
+tr, err := c.GetTransactions("fee", "2018-11-20", "2018-12-02", "", 500) // Only fee transactions between two dates, any counterparty, max 500
+```
+
+This returns a slice of TransactionStatus structures, each containing a slice of Legs with information about the journey of the transaction.
