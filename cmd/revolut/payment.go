@@ -16,6 +16,8 @@ type PaymentCmd struct {
 	Send PaySendCmd `command:"send" description:"Send money/pay a counterparty."`
 	// Show status
 	Show PayShowCmd `command:"show" alias:"status" description:"Show the status of a payment."`
+	// Cancel a transaction
+	Cancel PayCancelCmd `command:"cancel" description:"Cancel a scheduled payment, if possible."`
 }
 
 // PayListCmd shows payments and/or internal transactions.
@@ -121,7 +123,7 @@ type PayShowCmd struct {
 	ShortOption
 	DetailsOption
 	Args struct {
-		ID string `required:"true" positional-arg-name:"TRANSACTION" description:"UUID of a transaction."`
+		ID string `required:"true" positional-arg-name:"TRANSACTION" description:"UUID of a transaction to view."`
 	} `positional-args:"true"`
 }
 
@@ -139,4 +141,21 @@ func (cmd *PayShowCmd) Execute(args []string) error {
 
 	displayTransaction(*resp, cmd.Short, cmd.Details)
 	return nil
+}
+
+// PayCancelCmd tries to cancel a scheduled payment.
+type PayCancelCmd struct {
+	Args struct {
+		ID string `required:"true" positional-arg-name:"TRANSACTION" description:"UUID of a transaction to cancel."`
+	} `positional-args:"true"`
+}
+
+// Execute the cancellation.
+func (cmd *PayCancelCmd) Execute(args []string) error {
+	c, err := newClient()
+	if err != nil {
+		return err
+	}
+
+	return c.CancelPayment(cmd.Args.ID)
 }

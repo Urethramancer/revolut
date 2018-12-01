@@ -81,3 +81,17 @@ func (c *Client) Pay(id, account, cp, cpAccount, currency, reference, schedule s
 	err = json.Unmarshal(contents, &resp)
 	return &resp, err
 }
+
+// CancelPayment if possible.
+func (c *Client) CancelPayment(id string) error {
+	contents, code, err := c.Delete(epTransaction + "/" + id)
+	if err != nil {
+		return err
+	}
+
+	if code != 204 {
+		return jsonError(contents)
+	}
+
+	return nil
+}

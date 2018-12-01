@@ -14,9 +14,9 @@
 - Delete counterparties
 - View transactions and transfer between own accounts
 - Pay Revolut/external counterparties abd check status of payment
+- Cancel scheduled payments
 
 ## TODO
-- Finish payment cancellation
 - Webhooks
 - Better/cleaner information in lists, removing unnecessary text
 - Use nicknames for lookups
