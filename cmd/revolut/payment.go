@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/Urethramancer/revolut"
 	"github.com/Urethramancer/slog"
@@ -9,7 +10,10 @@ import (
 
 // PaymentCmd contains all the payment and transaction commands.
 type PaymentCmd struct {
+	// List transfers
 	List PayListCmd `command:"list" alias:"ls" description:"List payment/transaction history with optional filters."`
+	// Send money
+	Send PaySendCmd `command:"send" description:"Send money/pay a counterparty."`
 }
 
 // PayListCmd shows payments and/or internal transactions.
@@ -86,4 +90,35 @@ func displayTransaction(t revolut.TransactionStatus, short, details bool) {
 			slog.Msg("\t%s: %.2f %s%s, %s", lid, l.Amount, l.Currency, alt, l.Description)
 		}
 	}
+}
+
+// PaySendCmd sends money to counterparties.
+type PaySendCmd struct {
+	ReferenceOption
+	RecAccount   string `short:"a" long:"account" description:"Counterparty account, if necessary. This isn't required for Revolut counterparties." value-name:"ACCOUNT"`
+	ScheduleTime string `short:"s" long:"schedule" description:"Scheduled time to start the payment. Use YYYY-MM-DD or ISO3339." value-name:"TIME"`
+	Args         struct {
+		Account      string  `required:"true" positional-arg-name:"ACCOUNT" description:"UUID of the  account to pay from."`
+		Counterparty string  `required:"true" positional-arg-name:"COUNTERPARTY" description:"UUID of the receiving counterparty."`
+		Amount       float64 `required:"true" positional-arg-name:"AMOUNT" description:"Amount to transfer."`
+		Currency     string  `required:"true" positional-arg-name:"CURRENCY" description:"Currency to transfer in."`
+	} `positional-args:"true"`
+}
+
+// Execute the payment
+func (cmd *PaySendCmd) Execute(args []string) error {
+	c, err := newClient()
+	if err != nil {
+		return err
+	}
+
+	id := generateRequestID()
+	slog.Msg("Paying %.2f %s with ID %s.", cmd.Args.Amount, strings.ToUpper(cmd.Args.Currency), id)
+	resp, err := c.Pay(id, cmd.Args.Account, cmd.Args.Counterparty, cmd.RecAccount, cmd.Args.Currency, cmd.Reference, cmd.ScheduleTime, cmd.Args.Amount)
+	if err != nil {
+		return err
+	}
+
+	slog.Msg("Created payment %s: %s", resp.ID, resp.State)
+	return nil
 }
